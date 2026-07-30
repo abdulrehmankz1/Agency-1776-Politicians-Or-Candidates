@@ -1,6 +1,7 @@
 'use client'
 
-import CampaignPreview from '@/components/campaign-preview'
+import Image from 'next/image'
+
 import CtaButton from '@/components/cta-button'
 import Icon from '@/components/icon'
 import MagneticCard from '@/components/magnetic-card'
@@ -10,28 +11,11 @@ import { WORK } from '@/constants/campaign'
 import { useScrubHeading } from '@/hooks/use-scrub-heading'
 import { useSectionReveal } from '@/hooks/use-section-reveal'
 
-const PREVIEW_VARIANTS = ['a', 'b', 'c', 'd', 'a', 'b']
-
-/*
- * Explicit column-span layout — index by array position matches the order in
- * WORK.showcase.projects. The result is an editorial staggered grid, not a
- * uniform tile matrix:
- *   row 1: [wide 2/3] [compact 1/3]
- *   row 2: [compact 1/3] [compact 1/3] [compact 1/3]
- *   row 3: [compact 1/3] [wide 2/3]
- */
-const CELL_SPANS = [
-  'lg:col-span-8',
-  'lg:col-span-4',
-  'lg:col-span-4',
-  'lg:col-span-4',
-  'lg:col-span-4',
-  'lg:col-span-8',
-]
-
 const Showcase = () => {
   const scopeRef = useSectionReveal()
   const headingRef = useScrubHeading()
+
+  const total = WORK.showcase.projects.length
 
   return (
     <section
@@ -75,35 +59,42 @@ const Showcase = () => {
           </div>
         </header>
 
-        {/* Staggered showcase grid. Each card is a clickable anchor routing to
-            /work/[slug]; every card renders a `<CampaignPreview />` placeholder
-            with a distinct variant so the grid doesn't read as repeated tiles. */}
-        <ul className="grid grid-cols-1 gap-px bg-muted md:grid-cols-2 lg:grid-cols-12">
+        {/* Uniform showcase grid — every card is the same size so rows never
+            mismatch in height. Each card is a clickable anchor that opens the
+            live campaign site in a new tab and renders a real
+            Playwright-captured screenshot of that site. */}
+        <ul className="grid grid-cols-1 gap-px bg-muted md:grid-cols-2">
           {WORK.showcase.projects.map((project, i) => (
             <li
               key={project.slug}
-              className={`relative flex bg-background ${CELL_SPANS[i]}`}
+              className="relative flex bg-background"
             >
               <MagneticCard
                 as="a"
-                href={`/work/${project.slug}`}
+                href={project.href}
+                target="_blank"
+                rel="noopener noreferrer"
                 data-cursor="view"
                 strength={0.07}
+                aria-label={`${project.name} — ${project.role} (opens live site in a new tab)`}
                 className="group block h-full w-full"
                 innerClassName="flex h-full flex-col gap-6 p-6 lg:p-8"
               >
                 <RevealBorder tone="muted" />
 
-                {/* Preview mockup — aspect-ratio wrapper so cards line up
+                {/* Live-site screenshot — aspect-ratio wrapper so cards line up
                     even though the compositions inside differ. */}
                 <div className="relative aspect-[16/10] w-full overflow-hidden bg-surface">
                   <RevealBorder tone="foreground" />
-                  <CampaignPreview
-                    variant={PREVIEW_VARIANTS[i]}
-                    className="absolute inset-0 transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                  <Image
+                    src={project.image}
+                    alt={`${project.name} campaign website built by Agency 1776`}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 66vw"
+                    className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.03]"
                   />
 
-                  {/* Hover overlay — subtle accent tint + "View" tag that
+                  {/* Hover overlay — subtle accent tint + "Visit site" tag that
                       slides in from the bottom on hover. */}
                   <span
                     aria-hidden="true"
@@ -114,34 +105,38 @@ const Showcase = () => {
                     className="pointer-events-none absolute bottom-4 left-4 flex translate-y-1 items-center gap-2 border border-accent bg-background/90 px-3 py-1.5 opacity-0 transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100"
                   >
                     <span className="font-mono text-[0.65rem] uppercase tracking-[0.28em] text-accent">
-                      View
+                      Visit site
                     </span>
                     <Icon
                       name="arrow"
-                      className="h-3 w-3 text-accent"
+                      className="h-3 w-3 -rotate-45 text-accent"
                       strokeWidth={2}
                     />
                   </span>
                 </div>
 
-                {/* Meta row — index + accent leader + arrow. No project name
-                    (none supplied); this is intentionally placeholder chrome. */}
+                {/* Meta row — client name + race, with the running index and an
+                    external-link arrow. */}
                 <div className="flex items-center gap-4">
+                  <div className="min-w-0">
+                    <h3 className="truncate font-display text-lg uppercase leading-none tracking-[0.06em] text-foreground">
+                      {project.name}
+                    </h3>
+                    <p className="mt-2 truncate text-[0.8rem] leading-none text-foreground/60">
+                      {project.role}
+                    </p>
+                  </div>
+
                   <span
                     data-reveal="icon"
                     aria-hidden="true"
-                    className="font-mono text-[0.7rem] uppercase tracking-[0.28em] text-accent"
+                    className="ml-auto font-mono text-[0.7rem] uppercase tracking-[0.28em] text-accent"
                   >
-                    {String(i + 1).padStart(2, '0')} / 06
+                    {String(i + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
                   </span>
-                  <span
-                    data-reveal="icon"
-                    aria-hidden="true"
-                    className="h-px w-10 bg-accent transition-all duration-500 group-hover:w-24"
-                  />
                   <Icon
                     name="arrow"
-                    className="ml-auto h-4 w-4 text-foreground/60 transition-transform duration-500 group-hover:translate-x-1 group-hover:text-accent"
+                    className="h-4 w-4 -rotate-45 text-foreground/60 transition-transform duration-500 group-hover:translate-x-1 group-hover:text-accent"
                     strokeWidth={1.75}
                   />
                 </div>
