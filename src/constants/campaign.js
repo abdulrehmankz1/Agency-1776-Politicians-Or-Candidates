@@ -402,10 +402,11 @@ export const SOLUTIONS = {
 }
 
 /*
- * WORK (Campaigns Built) page content. The client's brief supplied only the
- * two sections below verbatim — hero copy and the "The Work" section header +
- * CTA. Actual project data was deliberately omitted, so the showcase renders
- * placeholder cards (index-only, no invented client names or descriptions).
+ * WORK (Campaigns Built) page content. The showcase now carries real client
+ * projects — each entry pairs the client name with the live campaign site and
+ * a screenshot captured from that site (stored in /public/work). The `role`
+ * line is taken directly from each site's own hero (race / office / district)
+ * so nothing here is invented. Cards link out to the live site in a new tab.
  */
 export const WORK = {
   hero: {
@@ -419,18 +420,67 @@ export const WORK = {
     body: 'Every campaign has a different race, audience, and path to support.',
     cta: { label: 'CONTACT US ABOUT A CAMPAIGN', href: '/contact' },
     /*
-     * Placeholder card entries — no invented names or copy. Each card renders
-     * a stylised website preview + numeric index and routes to
-     * `/work/[slug]`, which lives as a placeholder detail page until real
-     * project data is supplied.
+     * Real client projects. `image` points at the Playwright-captured
+     * screenshot in /public/work; `href` is the live campaign site (opened in
+     * a new tab). `role` is the race/office as stated on each client's site.
      */
     projects: [
-      { slug: 'campaign-01', size: 'wide' },
-      { slug: 'campaign-02', size: 'compact' },
-      { slug: 'campaign-03', size: 'compact' },
-      { slug: 'campaign-04', size: 'compact' },
-      { slug: 'campaign-05', size: 'compact' },
-      { slug: 'campaign-06', size: 'wide' },
+      {
+        slug: 'mark-norman',
+        name: 'Mark Norman',
+        role: 'Oregon House District 27',
+        href: 'https://www.markfororegon.com/',
+        image: '/work/mark-norman.png',
+      },
+      {
+        slug: 'royce-white',
+        name: 'Royce White',
+        role: 'U.S. Senate — Minnesota',
+        href: 'https://roycewhite.vercel.app/',
+        image: '/work/royce-white.png',
+      },
+      {
+        slug: 'barbara-kahl',
+        name: 'Dr. Barbara Kahl',
+        role: 'Oregon’s 1st Congressional District',
+        href: 'https://www.drkahlforcongress.com/',
+        image: '/work/barbara-kahl.png',
+      },
+      {
+        slug: 'david-morse',
+        name: 'David Morse',
+        role: 'Fourth District Judge — Idaho',
+        href: 'https://morseforidaho.vercel.app/',
+        image: '/work/david-morse.png',
+      },
+      {
+        slug: 'jenny-kamprath',
+        name: 'Jenny Kamprath',
+        role: 'Washington County Chair — Oregon',
+        href: 'https://friendsofjennykamprath.vercel.app/',
+        image: '/work/jenny-kamprath.png',
+      },
+      {
+        slug: 'david-russ',
+        name: 'David Russ',
+        role: 'Congress — Oregon District 6',
+        href: 'https://russisforus.com/',
+        image: '/work/david-russ.png',
+      },
+      {
+        slug: 'coos-county-republicans',
+        name: 'Coos County Republicans',
+        role: 'Republican Central Committee — Oregon',
+        href: 'https://www.coos.gop/',
+        image: '/work/coos-county-republicans.png',
+      },
+      {
+        slug: 'mark-geist',
+        name: 'Mark Geist',
+        role: 'The Oz Cast — Media',
+        href: 'https://markgeist.vercel.app/',
+        image: '/work/mark-geist.png',
+      },
     ],
   },
 }
