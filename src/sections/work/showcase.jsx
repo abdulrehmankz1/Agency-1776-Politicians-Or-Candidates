@@ -143,6 +143,13 @@ const Showcase = () => {
               </MagneticCard>
             </li>
           ))}
+
+          {/* Odd project count leaves a dangling grid cell; this filler keeps
+              that cell the same colour as the cards (instead of the muted gap
+              colour) so the last row still reads clean. */}
+          {WORK.showcase.projects.length % 2 === 1 && (
+            <li aria-hidden="true" className="hidden bg-background md:block" />
+          )}
         </ul>
       </div>
     </section>
