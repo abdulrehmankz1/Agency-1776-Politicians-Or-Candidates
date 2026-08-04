@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 
 import Combobox from '@/components/combobox'
@@ -11,6 +11,7 @@ import SplitText from '@/components/split-text'
 import { CONTACT_PAGE } from '@/constants/campaign'
 import { useScrubHeading } from '@/hooks/use-scrub-heading'
 import { useSectionReveal } from '@/hooks/use-section-reveal'
+import { formatPhoneInput } from '@/lib/phone'
 import { cn } from '@/utils/cn'
 import { ScrollTrigger } from '@/utils/register-gsap'
 
@@ -47,9 +48,12 @@ const FieldShell = ({ index, label, required, error, children }) => (
 const inputBase =
   'peer block w-full appearance-none border-0 border-b border-muted bg-transparent py-3 text-base text-foreground placeholder:text-foreground/40 outline-none transition-colors focus:border-accent'
 
+const CONSENT = CONTACT_PAGE.form.consent
+
 const initialFormState = () => {
   const state = {}
   for (const f of CONTACT_PAGE.form.fields) state[f.name] = ''
+  for (const c of CONSENT.options) state[c.name] = false
   return state
 }
 
@@ -96,11 +100,15 @@ const validate = (values) => {
   if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     errors.email = 'Invalid email'
   }
-  // Phone is optional, but a partially-typed number is worse than none —
-  // require a complete 10-digit number or an empty field.
-  const phone = values.phone?.trim()
-  if (phone && !isCompletePhone(phone)) {
-    errors.phone = 'Enter a complete 10-digit number'
+  /*
+   * Consent is unreachable — and unrequired — until a phone number exists. The
+   * form runs `noValidate`, so `required={hasPhone}` on each box is there for
+   * assistive tech; this check is what actually blocks the submit.
+   */
+  if (values.phone?.trim()) {
+    for (const c of CONSENT.options) {
+      if (!values[c.name]) errors[c.name] = 'Required'
+    }
   }
   return errors
 }
@@ -112,20 +120,51 @@ const ContactForm = () => {
   const [values, setValues] = useState(initialFormState)
   const [errors, setErrors] = useState({})
   const [status, setStatus] = useState('idle') // idle | submitting | success | error
+  const [notice, setNotice] = useState('')
 
-  const update =
-    (name, format) =>
-    (event) => {
-      const value = format ? format(event.target.value) : event.target.value
-      setValues((v) => ({ ...v, [name]: value }))
-      if (errors[name]) {
-        setErrors((prev) => {
-          const next = { ...prev }
-          delete next[name]
-          return next
-        })
-      }
-    }
+  const hasPhone = values.phone.trim().length > 0
+
+  /*
+   * A user who ticks the boxes, then deletes the phone, must not ship stale
+   * consent. Clearing the flags here is what makes `sms_*: 'No'` guaranteed
+   * whenever the number normalises to empty.
+   */
+  useEffect(() => {
+    if (hasPhone) return
+    setValues((v) => {
+      const next = { ...v }
+      for (const c of CONSENT.options) next[c.name] = false
+      return next
+    })
+    setErrors((prev) => {
+      const next = { ...prev }
+      for (const c of CONSENT.options) delete next[c.name]
+      return next
+    })
+  }, [hasPhone])
+
+  const clearError = (name) =>
+    setErrors((prev) => {
+      if (!prev[name]) return prev
+      const next = { ...prev }
+      delete next[name]
+      return next
+    })
+
+  const update = (name) => (event) => {
+    // The phone field owns the `+1` — every keystroke re-formats through the
+    // shared helper so the value is always canonical, never raw digits.
+    const raw = event.target.value
+    const value = name === 'phone' ? formatPhoneInput(raw) : raw
+    setValues((v) => ({ ...v, [name]: value }))
+    clearError(name)
+  }
+
+  const toggleConsent = (name) => (event) => {
+    const { checked } = event.target
+    setValues((v) => ({ ...v, [name]: checked }))
+    clearError(name)
+  }
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -133,6 +172,7 @@ const ContactForm = () => {
     if (Object.keys(nextErrors).length) {
       setErrors(nextErrors)
       setStatus('error')
+      setNotice('Please check the highlighted fields.')
       // Focus first invalid field for screen readers.
       const firstError = Object.keys(nextErrors)[0]
       const firstField = event.currentTarget.querySelector(
@@ -142,15 +182,30 @@ const ContactForm = () => {
       return
     }
     setErrors({})
+    setNotice('')
     setStatus('submitting')
-    // No backend wired — simulate an async send so the loading state is real.
-    await new Promise((resolve) => setTimeout(resolve, 1200))
-    setStatus('success')
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(values),
+      })
+      if (!response.ok) {
+        throw new Error(`Contact API responded ${response.status}`)
+      }
+      setStatus('success')
+    } catch (error) {
+      console.error('[ContactForm]:', error)
+      setStatus('error')
+      setNotice('We could not send that. Please try again in a moment.')
+    }
   }
 
   const resetForm = () => {
     setValues(initialFormState())
     setErrors({})
+    setNotice('')
     setStatus('idle')
   }
 
@@ -322,6 +377,63 @@ const ContactForm = () => {
                       </FieldShell>
                     ))}
 
+                    {/*
+                     * SMS consent. Disabled until a phone number exists,
+                     * required the moment one does, auto-cleared when the
+                     * number is deleted.
+                     */}
+                    <FieldShell
+                      index={CONTACT_PAGE.form.fields.length + 1}
+                      label={CONSENT.label}
+                      required={hasPhone}
+                      error={
+                        CONSENT.options
+                          .map((c) => errors[c.name])
+                          .find(Boolean) ?? undefined
+                      }
+                    >
+                      <div className="flex flex-col gap-4">
+                        {!hasPhone && (
+                          <p className="text-xs italic text-foreground/50">
+                            {CONSENT.helper}
+                          </p>
+                        )}
+
+                        {CONSENT.options.map((option) => (
+                          <label
+                            key={option.name}
+                            className={cn(
+                              'flex items-start gap-3 text-sm leading-relaxed transition-colors',
+                              hasPhone
+                                ? 'cursor-pointer'
+                                : 'cursor-not-allowed',
+                            )}
+                          >
+                            <input
+                              type="checkbox"
+                              name={option.name}
+                              checked={values[option.name]}
+                              onChange={toggleConsent(option.name)}
+                              disabled={!hasPhone || submitting}
+                              required={hasPhone}
+                              aria-invalid={!!errors[option.name]}
+                              data-cursor="button"
+                              className="mt-1 h-4 w-4 shrink-0 accent-accent disabled:cursor-not-allowed disabled:opacity-40"
+                            />
+                            <span
+                              className={
+                                hasPhone
+                                  ? 'text-foreground/75'
+                                  : 'text-foreground/40'
+                              }
+                            >
+                              {option.text}
+                            </span>
+                          </label>
+                        ))}
+                      </div>
+                    </FieldShell>
+
                     {/* Submit row — button + status message. */}
                     <div className="mt-4 flex flex-col gap-4 border-t border-muted/50 pt-8 sm:flex-row sm:items-center sm:justify-between">
                       <button
@@ -348,12 +460,12 @@ const ContactForm = () => {
                         />
                       </button>
 
-                      {status === 'error' && (
+                      {status === 'error' && notice && (
                         <p
                           role="alert"
                           className="font-mono text-xs uppercase tracking-[0.22em] text-accent"
                         >
-                          Please check the highlighted fields.
+                          {notice}
                         </p>
                       )}
                     </div>

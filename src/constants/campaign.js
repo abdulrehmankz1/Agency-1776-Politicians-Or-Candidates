@@ -497,9 +497,14 @@ export const CONTACT_PAGE = {
         required: true,
       },
       {
+        /*
+         * Placeholder shows the full canonical shape rather than the brief's
+         * generic line — the field self-formats to `+1 (xxx) xxx-xxxx` and the
+         * user never types the country code, so the hint has to match.
+         */
         name: 'phone',
         label: 'Phone Number',
-        placeholder: '(555) 123-4567',
+        placeholder: '+1 (503) 555-0123',
         type: 'tel',
         required: false,
       },
@@ -580,6 +585,25 @@ export const CONTACT_PAGE = {
         required: true,
       },
     ],
+    /*
+     * SMS consent. Both boxes stay disabled until a phone number is present
+     * and become required the moment one is — the phone field itself stays
+     * optional. The disclosure text is the A2P copy; do not trim or reword it.
+     */
+    consent: {
+      label: 'SMS Consent',
+      helper: 'Enter a phone number above to opt in to SMS messages.',
+      options: [
+        {
+          name: 'smsUpdates',
+          text: 'By checking this box, I consent to receive updates from Agency 1776 via automated text messages at the phone number provided. Message frequency may vary. Message and data rates may apply. Text STOP to opt out or HELP for help.',
+        },
+        {
+          name: 'smsPromo',
+          text: 'By checking this box, I consent to receive promotional messages, event invitations, and marketing communications from Agency 1776 via automated text messages. Message frequency may vary. Message and data rates may apply. Text STOP to opt out or HELP for help.',
+        },
+      ],
+    },
     submit: { label: 'SEND CAMPAIGN INQUIRY' },
   },
 }
