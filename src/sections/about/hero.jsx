@@ -1,6 +1,6 @@
 'use client'
 
-import Antigravity from '@/components/antigravity'
+import HeroBackdrop from '@/components/hero-backdrop'
 import SplitText from '@/components/split-text'
 import { AGENCY, ABOUT } from '@/constants/campaign'
 import { useSectionReveal } from '@/hooks/use-section-reveal'
@@ -22,13 +22,13 @@ const AboutHero = () => {
       id="about-hero"
       className="relative isolate flex min-h-[100dvh] flex-col overflow-hidden bg-background pt-[7rem]"
     >
-      <Antigravity />
+      <HeroBackdrop />
 
       <div className="relative z-10 mx-auto flex w-full max-w-[1600px] flex-1 flex-col justify-center px-6 pb-16 lg:px-10">
         <div className="grid grid-cols-12 gap-6 lg:gap-8">
           <div className="col-span-12 lg:col-span-9">
-            <div className="flex items-center gap-3 text-[0.72rem] uppercase tracking-[0.28em] text-foreground/60">
-              <span className="border border-muted px-2 py-0.5 font-mono text-[0.7rem] text-foreground/80">
+            <div className="flex items-center gap-3 text-[0.82rem] uppercase tracking-[0.28em] text-foreground/60">
+              <span className="border border-muted px-2 py-0.5 font-mono text-[0.8rem] text-foreground/80">
                 01
               </span>
               <span
@@ -53,7 +53,7 @@ const AboutHero = () => {
                 data-reveal="icon"
                 className="block h-px w-14 bg-accent"
               />
-              <span className="font-mono text-[0.65rem] uppercase tracking-[0.28em] text-foreground/50">
+              <span className="font-mono text-[0.75rem] uppercase tracking-[0.28em] text-foreground/65">
                 Est. 2025
               </span>
             </div>

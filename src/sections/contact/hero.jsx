@@ -1,6 +1,6 @@
 'use client'
 
-import Antigravity from '@/components/antigravity'
+import HeroBackdrop from '@/components/hero-backdrop'
 import CtaButton from '@/components/cta-button'
 import Icon from '@/components/icon'
 import RevealBorder from '@/components/reveal-border'
@@ -26,13 +26,13 @@ const ContactHero = () => {
       id="contact-hero"
       className="relative isolate flex min-h-[100dvh] flex-col overflow-hidden bg-background pt-[7rem]"
     >
-      <Antigravity />
+      <HeroBackdrop />
 
       <div className="relative z-10 mx-auto flex w-full max-w-[1600px] flex-1 flex-col justify-center px-6 pb-16 lg:px-10">
         <div className="grid grid-cols-12 gap-6 lg:gap-12">
           <div className="col-span-12 lg:col-span-8">
-            <div className="flex items-center gap-3 text-[0.72rem] uppercase tracking-[0.28em] text-foreground/60">
-              <span className="border border-muted px-2 py-0.5 font-mono text-[0.7rem] text-foreground/80">
+            <div className="flex items-center gap-3 text-[0.82rem] uppercase tracking-[0.28em] text-foreground/60">
+              <span className="border border-muted px-2 py-0.5 font-mono text-[0.8rem] text-foreground/80">
                 01
               </span>
               <span
@@ -83,9 +83,9 @@ const ContactHero = () => {
               language as the hero right rails on Home and About. */}
           <aside
             aria-hidden="true"
-            className="col-span-12 hidden lg:col-span-4 lg:flex lg:justify-end"
+            className="col-span-12 hidden lg:col-span-4 lg:flex lg:items-center lg:justify-end"
           >
-            <div className="relative flex aspect-[4/5] w-full max-w-[360px] flex-col justify-between bg-surface p-8">
+            <div className="relative flex aspect-square w-full max-w-[360px] flex-col justify-between bg-surface p-8">
               <RevealBorder tone="accent" />
               <div className="flex items-start justify-between">
                 <Icon
@@ -101,11 +101,11 @@ const ContactHero = () => {
               </div>
               <div
                 data-reveal="icon"
-                className="font-display text-[clamp(5rem,8vw,7rem)] leading-none tracking-[0.005em] text-foreground/90"
+                className="font-display text-[clamp(3.5rem,5.5vw,5.5rem)] leading-none tracking-[0.005em] text-foreground/90"
               >
                 17<span className="text-accent">76</span>
               </div>
-              <div className="flex items-center gap-3 border-t border-muted pt-4 text-[0.65rem] uppercase tracking-[0.28em] text-foreground/60">
+              <div className="flex items-center gap-3 border-t border-muted pt-4 text-[0.75rem] uppercase tracking-[0.28em] text-foreground/60">
                 <Icon name="scroll" className="h-4 w-4" strokeWidth={1.5} />
                 <span>{AGENCY.brand}</span>
               </div>

@@ -1,6 +1,6 @@
 'use client'
 
-import Antigravity from '@/components/antigravity'
+import HeroBackdrop from '@/components/hero-backdrop'
 import CtaButton from '@/components/cta-button'
 import SplitText from '@/components/split-text'
 import { AGENCY, SOLUTIONS } from '@/constants/campaign'
@@ -32,13 +32,13 @@ const SolutionsHero = () => {
       id="solutions-hero"
       className="relative isolate flex min-h-[100dvh] flex-col overflow-hidden bg-background pt-[7rem]"
     >
-      <Antigravity />
+      <HeroBackdrop />
 
       <div className="relative z-10 mx-auto flex w-full max-w-[1600px] flex-1 flex-col justify-center px-6 pb-16 lg:px-10">
         <div className="grid grid-cols-12 gap-6 lg:gap-12">
           <div className="col-span-12 flex flex-col justify-center lg:col-span-8">
-            <div className="flex items-center gap-3 text-[0.72rem] uppercase tracking-[0.28em] text-foreground/60">
-              <span className="border border-muted px-2 py-0.5 font-mono text-[0.7rem] text-foreground/80">
+            <div className="flex items-center gap-3 text-[0.82rem] uppercase tracking-[0.28em] text-foreground/60">
+              <span className="border border-muted px-2 py-0.5 font-mono text-[0.8rem] text-foreground/80">
                 01
               </span>
               <span
@@ -75,7 +75,7 @@ const SolutionsHero = () => {
             aria-hidden="true"
             className="col-span-12 hidden flex-col justify-end lg:col-span-4 lg:flex"
           >
-            <div className="flex items-center gap-3 text-[0.65rem] uppercase tracking-[0.28em] text-foreground/50">
+            <div className="flex items-center gap-3 text-[0.75rem] uppercase tracking-[0.28em] text-foreground/65">
               <span
                 data-reveal="icon"
                 className="block h-px w-10 bg-accent"
@@ -90,7 +90,7 @@ const SolutionsHero = () => {
                 >
                   <span
                     data-reveal="icon"
-                    className="font-mono text-[0.7rem] uppercase tracking-[0.28em] text-accent"
+                    className="font-mono text-[0.8rem] uppercase tracking-[0.28em] text-accent"
                   >
                     {item.num}
                   </span>

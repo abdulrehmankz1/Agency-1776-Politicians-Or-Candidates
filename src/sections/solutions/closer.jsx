@@ -24,8 +24,8 @@ const Closer = () => {
 
           <div className="relative grid grid-cols-12 items-start gap-10 lg:gap-14">
             <div className="col-span-12 lg:col-span-8">
-              <div className="flex items-center gap-3 text-[0.72rem] uppercase tracking-[0.28em] text-foreground/60">
-                <span className="border border-muted px-2 py-0.5 font-mono text-[0.7rem] text-foreground/80">
+              <div className="flex items-center gap-3 text-[0.82rem] uppercase tracking-[0.28em] text-foreground/60">
+                <span className="border border-muted px-2 py-0.5 font-mono text-[0.8rem] text-foreground/80">
                   06
                 </span>
                 <span
@@ -85,7 +85,7 @@ const Closer = () => {
                     className="h-4 w-4 text-accent"
                     strokeWidth={1.75}
                   />
-                  <span className="text-[0.62rem] uppercase tracking-[0.28em] text-foreground/60">
+                  <span className="text-[0.72rem] uppercase tracking-[0.28em] text-foreground/60">
                     {AGENCY.brand}
                   </span>
                 </div>

@@ -1,4 +1,5 @@
 import Footer from '@/components/footer'
+import ScrollToForm from '@/components/scroll-to-form'
 import ContactForm from '@/sections/contact/form'
 import ContactHero from '@/sections/contact/hero'
 
@@ -11,6 +12,8 @@ export const metadata = {
 const ContactPage = () => {
   return (
     <main className="relative">
+      {/* Reads `?to=form` and scrolls to the inquiry form (smoother-aware). */}
+      <ScrollToForm />
       <ContactHero />
       <ContactForm />
       <Footer />

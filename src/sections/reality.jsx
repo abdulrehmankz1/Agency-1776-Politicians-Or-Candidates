@@ -29,8 +29,8 @@ const Reality = () => {
             aria-hidden="true"
             className="col-span-12 flex flex-col justify-between border-l border-accent pl-6 lg:col-span-3"
           >
-            <div className="flex items-center gap-3 text-[0.72rem] uppercase tracking-[0.28em] text-accent">
-              <span className="border border-accent px-2 py-0.5 font-mono text-[0.7rem] text-accent">
+            <div className="flex items-center gap-3 text-[0.82rem] uppercase tracking-[0.28em] text-accent">
+              <span className="border border-accent px-2 py-0.5 font-mono text-[0.8rem] text-accent">
                 03
               </span>
               <span
@@ -47,14 +47,14 @@ const Reality = () => {
               /03
             </div>
 
-            <div className="mt-6 hidden items-center gap-3 text-[0.68rem] uppercase tracking-[0.28em] text-foreground/50 lg:flex">
+            <div className="mt-6 hidden items-center gap-3 text-[0.78rem] uppercase tracking-[0.28em] text-foreground/65 lg:flex">
               <Icon name="pulse" className="h-5 w-5 text-accent" strokeWidth={1.5} />
               <span>{REALITY.eyebrow}</span>
             </div>
           </aside>
 
           <div className="col-span-12 lg:col-span-9">
-            <div className="text-[0.72rem] uppercase tracking-[0.28em] text-accent lg:hidden">
+            <div className="text-[0.82rem] uppercase tracking-[0.28em] text-accent lg:hidden">
               {REALITY.eyebrow}
             </div>
 

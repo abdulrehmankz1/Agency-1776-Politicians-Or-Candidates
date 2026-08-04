@@ -38,8 +38,8 @@ const Forward = () => {
             single top-down column so the reader always sees the heading
             before its description. */}
         <header className="max-w-[1180px] pb-16">
-          <div className="flex items-center gap-3 text-[0.72rem] uppercase tracking-[0.28em] text-foreground/60">
-            <span className="border border-muted px-2 py-0.5 font-mono text-[0.7rem] text-foreground/80">
+          <div className="flex items-center gap-3 text-[0.82rem] uppercase tracking-[0.28em] text-foreground/60">
+            <span className="border border-muted px-2 py-0.5 font-mono text-[0.8rem] text-foreground/80">
               02
             </span>
             <span
@@ -90,7 +90,7 @@ const Forward = () => {
                         <span
                           data-reveal="icon"
                           aria-hidden="true"
-                          className="font-mono text-[0.68rem] uppercase tracking-[0.28em] text-accent"
+                          className="font-mono text-[0.78rem] uppercase tracking-[0.28em] text-accent"
                         >
                           01/09
                         </span>

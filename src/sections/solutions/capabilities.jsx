@@ -19,8 +19,8 @@ const Capabilities = () => {
     >
       <div className="relative mx-auto max-w-[1600px] px-6 lg:px-10">
         <header className="max-w-[1180px] pb-16">
-          <div className="flex items-center gap-3 text-[0.72rem] uppercase tracking-[0.28em] text-foreground/60">
-            <span className="border border-muted px-2 py-0.5 font-mono text-[0.7rem] text-foreground/80">
+          <div className="flex items-center gap-3 text-[0.82rem] uppercase tracking-[0.28em] text-foreground/60">
+            <span className="border border-muted px-2 py-0.5 font-mono text-[0.8rem] text-foreground/80">
               03
             </span>
             <span
@@ -55,7 +55,7 @@ const Capabilities = () => {
                   <span
                     data-reveal="icon"
                     aria-hidden="true"
-                    className="font-mono text-[0.7rem] uppercase tracking-[0.28em] text-accent"
+                    className="font-mono text-[0.8rem] uppercase tracking-[0.28em] text-accent"
                   >
                     {String(i + 1).padStart(2, '0')}
                   </span>

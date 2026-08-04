@@ -10,28 +10,29 @@ import { useSectionReveal } from '@/hooks/use-section-reveal'
 import { scrollToTop } from '@/utils/scroll-to'
 
 /*
- * Every entry routes to a real page. Home-section anchors (Forward / Reality
- * / Process → `/#foo`) were removed as part of the site-wide navigation
- * audit — they violated the "page routes only" rule.
+ * The site's real pages, split across the footer's two navigation columns for
+ * a balanced layout. Every entry routes to a real page — home-section anchors
+ * (`/#foo`) were removed in the site-wide navigation audit ("page routes
+ * only" rule). The old "What we build" column (four identical links to
+ * `/solutions`) was dropped; those capabilities live as sections inside the
+ * Solutions page, reachable via the Solutions link below.
  */
-const NAV = [
+const NAV_PRIMARY = [
+  { label: 'Home', href: '/' },
   { label: 'About', href: '/about' },
-  { label: 'Solutions', href: '/solutions' },
   { label: 'Work', href: '/work' },
+]
+
+const NAV_SECONDARY = [
   { label: 'Pricing', href: '/pricing' },
+  { label: 'Solutions', href: '/solutions' },
   { label: 'Contact', href: '/contact' },
 ]
 
-/*
- * Capability labels — every one lives inside the Solutions page (the "What
- * We Build for Political Campaigns." bento), so all four route there instead
- * of the removed `/#forward` hash.
- */
-const CAPABILITIES = [
-  { label: 'Candidate story', href: '/solutions' },
-  { label: 'Issues & priorities', href: '/solutions' },
-  { label: 'Donation path', href: '/solutions' },
-  { label: 'Volunteer signup', href: '/solutions' },
+// Legal pages — surfaced in the meta rail so they're reachable from every page.
+const NAV_LEGAL = [
+  { label: 'Privacy Policy', href: '/privacy-policy' },
+  { label: 'Terms of Service', href: '/terms-of-service' },
 ]
 
 const YEAR = new Date().getFullYear()
@@ -54,7 +55,7 @@ const Footer = () => {
         {/* Big wordmark up top acts as a visual signature. */}
         <div className="grid grid-cols-12 gap-8 border-b border-muted pb-16">
           <div className="col-span-12 lg:col-span-8">
-            <div className="flex items-center gap-3 text-[0.72rem] uppercase tracking-[0.28em] text-foreground/50">
+            <div className="flex items-center gap-3 text-[0.82rem] uppercase tracking-[0.28em] text-foreground/65">
               <span
                 data-reveal="icon"
                 aria-hidden="true"
@@ -95,7 +96,7 @@ const Footer = () => {
               >
                 17<span className="text-accent">76</span>
               </div>
-              <div className="mt-6 flex items-center gap-3 border-t border-muted pt-4 text-[0.65rem] uppercase tracking-[0.28em] text-foreground/50">
+              <div className="mt-6 flex items-center gap-3 border-t border-muted pt-4 text-[0.75rem] uppercase tracking-[0.28em] text-foreground/65">
                 <Icon name="scroll" className="h-4 w-4" strokeWidth={1.5} />
                 <span>Est. 2025</span>
               </div>
@@ -106,14 +107,14 @@ const Footer = () => {
         {/* Link groups — hairline three-column set. */}
         <div className="grid grid-cols-1 gap-10 py-16 md:grid-cols-3 lg:gap-16">
           <FooterGroup
-            title="Navigate"
+            title="Company"
             index="A"
-            items={NAV}
+            items={NAV_PRIMARY}
           />
           <FooterGroup
-            title="What we build"
+            title="Explore"
             index="B"
-            items={CAPABILITIES}
+            items={NAV_SECONDARY}
           />
           <div>
             <FooterGroupHeader title="Get in touch" index="C" />
@@ -128,14 +129,14 @@ const Footer = () => {
                 <FooterLink href="/contact" label="Start the conversation" />
               </li>
               <li>
-                <FooterLink onClick={scrollToTop} label="Back to top" />
+                <FooterLink onClick={scrollToTop} label="Back to the top" />
               </li>
             </ul>
           </div>
         </div>
 
-        {/* Meta rail — copyright, year plate, brand mark. */}
-        <div className="flex flex-col gap-6 border-t border-muted pt-8 text-[0.68rem] uppercase tracking-[0.28em] text-foreground/50 md:flex-row md:items-center md:justify-between">
+        {/* Meta rail — copyright, legal links, year plate, brand mark. */}
+        <div className="flex flex-col gap-6 border-t border-muted pt-8 text-[0.78rem] uppercase tracking-[0.28em] text-foreground/65 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-3">
             <span
               data-reveal="icon"
@@ -145,19 +146,22 @@ const Footer = () => {
             <span>© {YEAR} {AGENCY.brand}. All rights reserved.</span>
           </div>
 
-          <div className="flex items-center gap-6">
-            <span
-              aria-hidden="true"
-              className="hidden font-mono text-foreground/40 md:inline"
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+            {/* Legal pages — required links, always routed to real pages. */}
+            <nav
+              aria-label="Legal"
+              className="flex flex-wrap items-center gap-x-6 gap-y-3"
             >
-              Politicians / Candidates
-            </span>
+              {NAV_LEGAL.map((item) => (
+                <MetaLink key={item.label} href={item.href} label={item.label} />
+              ))}
+            </nav>
             <span
               data-reveal="icon"
               aria-hidden="true"
-              className="hidden h-px w-16 bg-muted md:block"
+              className="hidden h-px w-10 bg-muted md:block"
             />
-            <span className="font-mono text-foreground/40">v.01</span>
+            <span className="font-mono text-foreground/55">v.01</span>
           </div>
         </div>
       </div>
@@ -165,9 +169,28 @@ const Footer = () => {
   )
 }
 
+/*
+ * Compact link for the meta rail — uppercase, tracked, with an accent
+ * underline that swipes in on hover. Matches the rail's typographic scale
+ * rather than the larger body-size FooterLink used in the column groups.
+ */
+const MetaLink = ({ href, label }) => (
+  <Link
+    href={href}
+    data-cursor="link"
+    className="group relative inline-block text-foreground/65 transition-colors hover:text-foreground"
+  >
+    {label}
+    <span
+      aria-hidden="true"
+      className="pointer-events-none absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-accent transition-transform duration-500 ease-out group-hover:scale-x-100"
+    />
+  </Link>
+)
+
 const FooterGroupHeader = ({ title, index }) => (
-  <div className="flex items-center gap-3 text-[0.65rem] uppercase tracking-[0.28em] text-foreground/50">
-    <span className="border border-muted px-2 py-0.5 font-mono text-[0.65rem] text-foreground/70">
+  <div className="flex items-center gap-3 text-[0.75rem] uppercase tracking-[0.28em] text-foreground/65">
+    <span className="border border-muted px-2 py-0.5 font-mono text-[0.75rem] text-foreground/70">
       {index}
     </span>
     <span

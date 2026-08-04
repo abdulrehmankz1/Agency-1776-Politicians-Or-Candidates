@@ -26,8 +26,8 @@ const PricingCommit = () => {
 
           <div className="relative grid grid-cols-12 items-end gap-10">
             <div className="col-span-12 lg:col-span-8">
-              <div className="flex items-center gap-3 text-[0.72rem] uppercase tracking-[0.28em] text-foreground/60">
-                <span className="border border-muted px-2 py-0.5 font-mono text-[0.7rem] text-foreground/80">
+              <div className="flex items-center gap-3 text-[0.82rem] uppercase tracking-[0.28em] text-foreground/60">
+                <span className="border border-muted px-2 py-0.5 font-mono text-[0.8rem] text-foreground/80">
                   03
                 </span>
                 <span
@@ -95,7 +95,7 @@ const PricingCommit = () => {
                     className="h-4 w-4 text-accent"
                     strokeWidth={1.75}
                   />
-                  <span className="text-[0.62rem] uppercase tracking-[0.28em] text-foreground/60">
+                  <span className="text-[0.72rem] uppercase tracking-[0.28em] text-foreground/60">
                     {AGENCY.brand}
                   </span>
                 </div>

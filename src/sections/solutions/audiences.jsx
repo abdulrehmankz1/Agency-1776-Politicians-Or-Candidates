@@ -39,8 +39,8 @@ const Audiences = () => {
 
       <div className="relative mx-auto max-w-[1600px] px-6 lg:px-10">
         <header className="max-w-[1180px] pb-16">
-          <div className="flex items-center gap-3 text-[0.72rem] uppercase tracking-[0.28em] text-foreground/60">
-            <span className="border border-muted px-2 py-0.5 font-mono text-[0.7rem] text-foreground/80">
+          <div className="flex items-center gap-3 text-[0.82rem] uppercase tracking-[0.28em] text-foreground/60">
+            <span className="border border-muted px-2 py-0.5 font-mono text-[0.8rem] text-foreground/80">
               02
             </span>
             <span
@@ -96,7 +96,7 @@ const AudienceAccordion = ({ audience, index, open, onToggle }) => {
         <span
           data-reveal="icon"
           aria-hidden="true"
-          className="mt-3 font-mono text-[0.7rem] uppercase tracking-[0.28em] text-accent"
+          className="mt-3 font-mono text-[0.8rem] uppercase tracking-[0.28em] text-accent"
         >
           0{index + 1}
         </span>
@@ -138,7 +138,7 @@ const AudienceAccordion = ({ audience, index, open, onToggle }) => {
           >
             <div className="border-t border-muted/60 px-6 pb-10 pt-6 lg:px-10 lg:pl-[calc(2.5rem+3.75rem)]">
               {audience.intro && (
-                <p className="mb-6 text-[0.72rem] uppercase tracking-[0.28em] text-foreground/60">
+                <p className="mb-6 text-[0.82rem] uppercase tracking-[0.28em] text-foreground/60">
                   {audience.intro}
                 </p>
               )}

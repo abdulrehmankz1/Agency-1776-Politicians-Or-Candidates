@@ -1,6 +1,6 @@
 'use client'
 
-import Antigravity from '@/components/antigravity'
+import HeroBackdrop from '@/components/hero-backdrop'
 import CtaButton from '@/components/cta-button'
 import Icon from '@/components/icon'
 import RevealBorder from '@/components/reveal-border'
@@ -25,14 +25,14 @@ const PricingHero = () => {
       id="pricing-hero"
       className="relative isolate flex min-h-[100dvh] flex-col overflow-hidden bg-background pt-[7rem]"
     >
-      <Antigravity />
+      <HeroBackdrop />
 
       <div className="relative z-10 mx-auto flex w-full max-w-[1600px] flex-1 flex-col justify-center px-6 pb-16 lg:px-10">
         <div className="grid grid-cols-12 items-end gap-8">
           <div className="col-span-12 lg:col-span-8">
             {/* Eyebrow — brand marker only. No invented descriptor text. */}
-            <div className="flex items-center gap-3 text-[0.72rem] uppercase tracking-[0.28em] text-foreground/60">
-              <span className="border border-muted px-2 py-0.5 font-mono text-[0.7rem] text-foreground/80">
+            <div className="flex items-center gap-3 text-[0.82rem] uppercase tracking-[0.28em] text-foreground/60">
+              <span className="border border-muted px-2 py-0.5 font-mono text-[0.8rem] text-foreground/80">
                 01
               </span>
               <span
@@ -96,7 +96,7 @@ const PricingHero = () => {
 
               <div className="flex items-center gap-3 border-t border-muted pt-4">
                 <Icon name="scroll" className="h-4 w-4" strokeWidth={1.5} />
-                <span className="text-[0.72rem] uppercase tracking-[0.24em] text-foreground/70">
+                <span className="text-[0.82rem] uppercase tracking-[0.24em] text-foreground/70">
                   {AGENCY.brand}
                 </span>
               </div>

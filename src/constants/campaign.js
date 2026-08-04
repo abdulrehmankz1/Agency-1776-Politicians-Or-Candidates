@@ -394,9 +394,15 @@ export const SOLUTIONS = {
       'Need the Website, the Assets, or the Whole Digital Build?',
     body:
       'Tell us where your campaign stands and what needs to launch. Agency 1776 will help identify the right build path for your race.',
+    /*
+     * Single CTA. The old second button ("Contact Us") pointed at the same
+     * `/contact` page as this one, so it was pure redundancy and was removed.
+     * `?to=form` tells the contact page to scroll straight to the inquiry
+     * form (smoother-aware, see ScrollToForm) instead of dumping the reader at
+     * the top — or, as before, the footer — of the page.
+     */
     ctas: [
-      { label: 'START THE BUILD', href: '/contact', variant: 'primary' },
-      { label: 'CONTACT US', href: '/contact', variant: 'ghost' },
+      { label: 'START THE BUILD', href: '/contact?to=form', variant: 'primary' },
     ],
   },
 }
@@ -433,13 +439,6 @@ export const WORK = {
         image: '/work/mark-norman.png',
       },
       {
-        slug: 'royce-white',
-        name: 'Royce White',
-        role: 'U.S. Senate — Minnesota',
-        href: 'https://roycewhite.vercel.app/',
-        image: '/work/royce-white.png',
-      },
-      {
         slug: 'barbara-kahl',
         name: 'Dr. Barbara Kahl',
         role: 'Oregon’s 1st Congressional District',
@@ -447,32 +446,11 @@ export const WORK = {
         image: '/work/barbara-kahl.png',
       },
       {
-        slug: 'david-morse',
-        name: 'David Morse',
-        role: 'Fourth District Judge — Idaho',
-        href: 'https://morseforidaho.vercel.app/',
-        image: '/work/david-morse.png',
-      },
-      {
-        slug: 'jenny-kamprath',
-        name: 'Jenny Kamprath',
-        role: 'Washington County Chair — Oregon',
-        href: 'https://friendsofjennykamprath.vercel.app/',
-        image: '/work/jenny-kamprath.png',
-      },
-      {
         slug: 'randall-fryer',
         name: 'Randall Fryer',
         role: 'Oregon House District 28',
         href: 'https://randallfryer.vercel.app/',
         image: '/work/randall-fryer.png',
-      },
-      {
-        slug: 'coos-county-republicans',
-        name: 'Coos County Republicans',
-        role: 'Republican Central Committee — Oregon',
-        href: 'https://www.coos.gop/',
-        image: '/work/coos-county-republicans.png',
       },
     ],
   },

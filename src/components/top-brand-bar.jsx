@@ -14,8 +14,8 @@ const TOPBAR_BG          = '#050505'
 const TOPBAR_BG_95       = 'rgba(5,5,5,0.95)'
 const TOPBAR_BORDER      = 'rgba(58,58,58,0.4)'
 const TOPBAR_FG          = '#f0ede6'
+const TOPBAR_FG_85       = 'rgba(240,237,230,0.85)'
 const TOPBAR_FG_50       = 'rgba(240,237,230,0.5)'
-const TOPBAR_FG_45       = 'rgba(240,237,230,0.45)'
 const TOPBAR_FG_30       = 'rgba(240,237,230,0.3)'
 const TOPBAR_ACCENT      = '#bf0a30'
 const TOPBAR_ACCENT_60   = 'rgba(191,10,48,0.6)'
@@ -37,7 +37,7 @@ const TopBrandBar = () => {
       const inactive = scope.querySelectorAll("[data-topbar-tab='inactive']")
       inactive.forEach((el) => {
         const hoverIn  = () => gsap.to(el, { color: TOPBAR_FG,    duration: 0.35, ease: 'power2.out' })
-        const hoverOut = () => gsap.to(el, { color: TOPBAR_FG_45, duration: 0.35, ease: 'power2.out' })
+        const hoverOut = () => gsap.to(el, { color: TOPBAR_FG_85, duration: 0.35, ease: 'power2.out' })
         el.addEventListener('mouseenter', hoverIn)
         el.addEventListener('mouseleave', hoverOut)
       })
@@ -95,11 +95,11 @@ const TopBarTab = ({ tab }) => {
       aria-current={isActive ? 'page' : undefined}
       role={tab.href ? undefined : 'presentation'}
       className={cn(
-        'relative inline-flex select-none items-center whitespace-nowrap px-3 py-2 text-[10px] uppercase tracking-[0.28em] transition-opacity md:px-5 md:text-[11px]',
+        'relative inline-flex select-none items-center whitespace-nowrap px-3 py-2 text-[12px] uppercase tracking-[0.28em] transition-opacity md:px-5 md:text-[13px]',
         !isActive && !tab.href && 'cursor-not-allowed',
         tab.href ? 'cursor-pointer' : ''
       )}
-      style={{ color: isActive ? TOPBAR_ACCENT : TOPBAR_FG_45 }}
+      style={{ color: isActive ? TOPBAR_FG : TOPBAR_FG_85 }}
       title={isActive || tab.href ? undefined : 'Coming soon'}
     >
       {isActive && (

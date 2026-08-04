@@ -80,7 +80,16 @@ const Process = () => {
     if (!timelineRef.current) return undefined
     const root = timelineRef.current
 
-    const ctx = gsap.context(() => {
+    /*
+     * The timeline hides each step's card + icon and reveals them on scroll.
+     * That scroll dependency is unreliable on touch devices and could leave
+     * the steps blank, so the whole choreography is gated to desktop (wide
+     * viewport + fine pointer). On mobile nothing is hidden and every step
+     * renders immediately; matchMedia reverts on a breakpoint change too.
+     */
+    const mm = gsap.matchMedia()
+    mm.add('(min-width: 1024px) and (pointer: fine)', () => {
+      const ctx = gsap.context(() => {
       // Overall accent rail — scrubs with scroll through the whole timeline.
       const rail = root.querySelector('[data-timeline="rail"]')
       if (rail) {
@@ -166,9 +175,12 @@ const Process = () => {
           )
         }
       })
-    }, root)
+      }, root)
 
-    return () => ctx.revert()
+      return () => ctx.revert()
+    })
+
+    return () => mm.revert()
   }, [])
 
   return (
@@ -182,8 +194,8 @@ const Process = () => {
       <div className="relative mx-auto max-w-[1600px] px-6 lg:px-10">
         {/* Header — eyebrow → heading, top-down. No invented supporting copy. */}
         <header className="max-w-[1180px] pb-20">
-          <div className="flex items-center gap-3 text-[0.72rem] uppercase tracking-[0.28em] text-foreground/60">
-            <span className="border border-muted px-2 py-0.5 font-mono text-[0.7rem] text-foreground/80">
+          <div className="flex items-center gap-3 text-[0.82rem] uppercase tracking-[0.28em] text-foreground/60">
+            <span className="border border-muted px-2 py-0.5 font-mono text-[0.8rem] text-foreground/80">
               05
             </span>
             <span
@@ -252,7 +264,7 @@ const Process = () => {
                     data-timeline="card"
                     className="col-span-12 lg:col-span-9 xl:col-span-8"
                   >
-                    <div className="flex items-center gap-4 font-mono text-[0.68rem] uppercase tracking-[0.28em] text-accent">
+                    <div className="flex items-center gap-4 font-mono text-[0.78rem] uppercase tracking-[0.28em] text-accent">
                       <span>STAGE 0{step.num}</span>
                       <span
                         aria-hidden="true"

@@ -28,8 +28,8 @@ const Showcase = () => {
             for balance instead of the usual "below the body" position. */}
         <header className="grid grid-cols-12 gap-8 pb-16 lg:gap-10">
           <div className="col-span-12 lg:col-span-8">
-            <div className="flex items-center gap-3 text-[0.72rem] uppercase tracking-[0.28em] text-foreground/60">
-              <span className="border border-muted px-2 py-0.5 font-mono text-[0.7rem] text-foreground/80">
+            <div className="flex items-center gap-3 text-[0.82rem] uppercase tracking-[0.28em] text-foreground/60">
+              <span className="border border-muted px-2 py-0.5 font-mono text-[0.8rem] text-foreground/80">
                 02
               </span>
               <span
@@ -104,7 +104,7 @@ const Showcase = () => {
                     aria-hidden="true"
                     className="pointer-events-none absolute bottom-4 left-4 flex translate-y-1 items-center gap-2 border border-accent bg-background/90 px-3 py-1.5 opacity-0 transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100"
                   >
-                    <span className="font-mono text-[0.65rem] uppercase tracking-[0.28em] text-accent">
+                    <span className="font-mono text-[0.75rem] uppercase tracking-[0.28em] text-accent">
                       Visit site
                     </span>
                     <Icon
@@ -119,10 +119,10 @@ const Showcase = () => {
                     external-link arrow. */}
                 <div className="flex items-center gap-4">
                   <div className="min-w-0">
-                    <h3 className="truncate font-display text-lg uppercase leading-none tracking-[0.06em] text-foreground">
+                    <h3 className="truncate font-display text-xl uppercase leading-none tracking-[0.06em] text-foreground">
                       {project.name}
                     </h3>
-                    <p className="mt-2 truncate text-[0.8rem] leading-none text-foreground/60">
+                    <p className="mt-2 truncate text-[0.8rem] leading-none text-foreground/70">
                       {project.role}
                     </p>
                   </div>
@@ -130,7 +130,7 @@ const Showcase = () => {
                   <span
                     data-reveal="icon"
                     aria-hidden="true"
-                    className="ml-auto font-mono text-[0.7rem] uppercase tracking-[0.28em] text-accent"
+                    className="ml-auto font-mono text-[0.8rem] uppercase tracking-[0.28em] text-accent"
                   >
                     {String(i + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
                   </span>

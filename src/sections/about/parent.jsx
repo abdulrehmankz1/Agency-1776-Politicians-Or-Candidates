@@ -25,8 +25,8 @@ const Parent = () => {
         <div className="grid grid-cols-12 gap-10 lg:gap-12">
           {/* Left rail — eyebrow, index, framed accent plate. */}
           <div className="col-span-12 flex flex-col justify-between gap-10 lg:col-span-4">
-            <div className="flex items-center gap-3 text-[0.72rem] uppercase tracking-[0.28em] text-accent">
-              <span className="border border-accent px-2 py-0.5 font-mono text-[0.7rem] text-accent">
+            <div className="flex items-center gap-3 text-[0.82rem] uppercase tracking-[0.28em] text-accent">
+              <span className="border border-accent px-2 py-0.5 font-mono text-[0.8rem] text-accent">
                 02
               </span>
               <span
@@ -50,7 +50,7 @@ const Parent = () => {
               >
                 17<span className="text-accent">76</span>
               </div>
-              <div className="mt-6 flex items-center gap-3 border-t border-muted pt-4 text-[0.62rem] uppercase tracking-[0.28em] text-foreground/60">
+              <div className="mt-6 flex items-center gap-3 border-t border-muted pt-4 text-[0.72rem] uppercase tracking-[0.28em] text-foreground/60">
                 <Icon name="scroll" className="h-4 w-4" strokeWidth={1.5} />
                 <span>Ops 1776 Group</span>
               </div>
