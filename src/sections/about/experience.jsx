@@ -22,8 +22,8 @@ const Experience = () => {
       <div className="relative mx-auto max-w-[1600px] px-6 lg:px-10">
         <div className="grid grid-cols-12 gap-8">
           <div className="col-span-12 lg:col-span-4">
-            <div className="flex items-center gap-3 text-[0.72rem] uppercase tracking-[0.28em] text-foreground/60">
-              <span className="border border-muted px-2 py-0.5 font-mono text-[0.7rem] text-foreground/80">
+            <div className="flex items-center gap-3 text-[0.82rem] uppercase tracking-[0.28em] text-foreground/60">
+              <span className="border border-muted px-2 py-0.5 font-mono text-[0.8rem] text-foreground/80">
                 04
               </span>
               <span

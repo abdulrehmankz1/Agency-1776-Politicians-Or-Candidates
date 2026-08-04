@@ -76,7 +76,26 @@
       "Bash(node run.js \"C:/Users/General/AppData/Local/Temp/pw-diag-work.js\")",
       "Bash(node run.js \"C:/Users/General/AppData/Local/Temp/pw-link-check2.js\")",
       "Bash(TARGET_URL=http://localhost:3000 node run.js /tmp/playwright-test-topbar-theme.js)",
-      "Bash(TARGET_URL=http://localhost:3001 node run.js /tmp/playwright-test-topbar-theme.js)"
+      "Bash(TARGET_URL=http://localhost:3001 node run.js /tmp/playwright-test-topbar-theme.js)",
+      "Bash(cd *)",
+      "Bash(node run.js \"C:/Users/user/AppData/Local/Temp/claude/C--Users-user-Documents-development-claude-projects-Agency-1776-Politicians-Or-Candidates/0cba6259-f822-4486-bfc9-65f8b8004500/scratchpad/shoot-clients.js\")",
+      "Bash(node run.js \"C:/Users/user/AppData/Local/Temp/claude/C--Users-user-Documents-development-claude-projects-Agency-1776-Politicians-Or-Candidates/0cba6259-f822-4486-bfc9-65f8b8004500/scratchpad/shoot-fix.js\")",
+      "Bash(awk '{print $5, $9}')",
+      "Bash(python -c \"from PIL import Image; im=Image.open\\('royce-white.png'\\); print\\('size', im.size, 'mode', im.mode\\)\")",
+      "Bash(node -e \"const fs=require\\('fs'\\);const b=fs.readFileSync\\('royce-white.png'\\);console.log\\('bytes',b.length,'sig',b.slice\\(0,8\\).toString\\('hex'\\)\\)\")",
+      "Bash(node run.js \"C:/Users/user/AppData/Local/Temp/claude/C--Users-user-Documents-development-claude-projects-Agency-1776-Politicians-Or-Candidates/0cba6259-f822-4486-bfc9-65f8b8004500/scratchpad/verify-work.js\")",
+      "Bash(git checkout *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(node run.js \"C:/Users/user/AppData/Local/Temp/claude/C--Users-user-Documents-development-claude-projects-Agency-1776-Politicians-Or-Candidates/0cba6259-f822-4486-bfc9-65f8b8004500/scratchpad/shoot-randall.js\")",
+      "Bash(OUT_DIR=\"C:/Users/user/AppData/Local/Temp/claude/C--Users-user-Documents-development-claude-projects-Agency-1776-Politicians-Or-Candidates/ea0ae188-be49-4314-9bcc-758625943421/scratchpad\" node run.js \"C:/Users/user/AppData/Local/Temp/claude/C--Users-user-Documents-development-claude-projects-Agency-1776-Politicians-Or-Candidates/ea0ae188-be49-4314-9bcc-758625943421/scratchpad/shot-cards.js\")",
+      "Bash(node run.js ' *)",
+      "Bash(npx next *)",
+      "Bash(node -e \"try{require.resolve\\('playwright'\\);console.log\\('playwright ok'\\)}catch\\(e\\){try{require.resolve\\('puppeteer'\\);console.log\\('puppeteer ok'\\)}catch\\(e2\\){console.log\\('none'\\)}}\")",
+      "Bash(node run.js \"C:/Users/user/AppData/Local/Temp/claude/C--Users-user-Documents-development-claude-projects-Agency-1776-Politicians-Or-Candidates/cb5926c0-32b3-42b5-9c4e-5f6189f5789d/scratchpad/shot-legal.js\")",
+      "Bash(node run.js \"C:/Users/user/AppData/Local/Temp/claude/C--Users-user-Documents-development-claude-projects-Agency-1776-Politicians-Or-Candidates/cb5926c0-32b3-42b5-9c4e-5f6189f5789d/scratchpad/shot-terms-placeholders.js\")",
+      "Bash(netstat -ano)"
     ]
   }
 }

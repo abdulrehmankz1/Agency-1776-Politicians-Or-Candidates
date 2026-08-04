@@ -42,8 +42,8 @@ const PricingCalculator = () => {
       <div className="relative mx-auto max-w-[1600px] px-6 lg:px-10">
         {/* Section header — number badge only, no invented descriptor copy. */}
         <header className="max-w-[1180px] pb-16">
-          <div className="flex items-center gap-3 text-[0.72rem] uppercase tracking-[0.28em] text-foreground/60">
-            <span className="border border-muted px-2 py-0.5 font-mono text-[0.7rem] text-foreground/80">
+          <div className="flex items-center gap-3 text-[0.82rem] uppercase tracking-[0.28em] text-foreground/60">
+            <span className="border border-muted px-2 py-0.5 font-mono text-[0.8rem] text-foreground/80">
               02
             </span>
             <span
@@ -77,7 +77,7 @@ const PricingCalculator = () => {
                     className="block h-2 w-2 bg-accent"
                   />
                   <div>
-                    <div className="font-mono text-[0.68rem] uppercase tracking-[0.28em] text-accent">
+                    <div className="font-mono text-[0.78rem] uppercase tracking-[0.28em] text-accent">
                       Stage {number}
                     </div>
                     <h3 className="mt-3 text-2xl leading-[1.02] tracking-[0.005em] lg:text-3xl">
@@ -118,7 +118,7 @@ const PricingCalculator = () => {
 
             <div className="grid grid-cols-12 items-center gap-8">
               <div className="col-span-12 lg:col-span-2">
-                <div className="flex items-center gap-3 font-mono text-[0.68rem] uppercase tracking-[0.28em] text-accent">
+                <div className="flex items-center gap-3 font-mono text-[0.78rem] uppercase tracking-[0.28em] text-accent">
                   <span
                     data-reveal="icon"
                     aria-hidden="true"

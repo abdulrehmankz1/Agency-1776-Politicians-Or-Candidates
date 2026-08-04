@@ -28,7 +28,7 @@ const WorkDetailPage = async ({ params }) => {
         <div className="relative mx-auto flex w-full max-w-[1600px] flex-1 flex-col justify-center px-6 pb-20 lg:px-10">
           <div className="grid grid-cols-12 gap-10 lg:gap-14">
             <div className="col-span-12 lg:col-span-7">
-              <div className="flex items-center gap-3 text-[0.72rem] uppercase tracking-[0.28em] text-foreground/60">
+              <div className="flex items-center gap-3 text-[0.82rem] uppercase tracking-[0.28em] text-foreground/60">
                 <Link
                   href="/work"
                   className="group inline-flex items-center gap-2"

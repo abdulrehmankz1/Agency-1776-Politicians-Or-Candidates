@@ -87,8 +87,8 @@ const Scope = () => {
         {/* Header — eyebrow → heading → body, top-down so the heading always
             precedes its supporting paragraph. */}
         <header className="max-w-[1180px] pb-20">
-          <div className="flex items-center gap-3 text-[0.72rem] uppercase tracking-[0.28em] text-foreground/60">
-            <span className="border border-muted px-2 py-0.5 font-mono text-[0.7rem] text-foreground/80">
+          <div className="flex items-center gap-3 text-[0.82rem] uppercase tracking-[0.28em] text-foreground/60">
+            <span className="border border-muted px-2 py-0.5 font-mono text-[0.8rem] text-foreground/80">
               04
             </span>
             <span

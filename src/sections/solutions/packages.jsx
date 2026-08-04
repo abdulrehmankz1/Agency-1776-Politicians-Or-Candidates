@@ -23,8 +23,8 @@ const Packages = () => {
 
       <div className="relative mx-auto max-w-[1600px] px-6 lg:px-10">
         <header className="max-w-[1180px] pb-16">
-          <div className="flex items-center gap-3 text-[0.72rem] uppercase tracking-[0.28em] text-foreground/60">
-            <span className="border border-muted px-2 py-0.5 font-mono text-[0.7rem] text-foreground/80">
+          <div className="flex items-center gap-3 text-[0.82rem] uppercase tracking-[0.28em] text-foreground/60">
+            <span className="border border-muted px-2 py-0.5 font-mono text-[0.8rem] text-foreground/80">
               04
             </span>
             <span
@@ -48,10 +48,20 @@ const Packages = () => {
         <ul className="grid grid-cols-1 gap-px bg-muted md:grid-cols-2 lg:grid-cols-4">
           {SOLUTIONS.packages.items.map((pkg, i) => (
             <li key={pkg.title} className="relative flex bg-background">
+              {/*
+                Top-anchored inner layout (was `justify-between`). Bottom-
+                anchoring made the title+body block hug the card bottom, so
+                cards with a longer body — or a title that wraps to two lines —
+                pushed their heading UP, leaving the four headings starting at
+                different heights. Flowing the content from the top beneath the
+                fixed-height index row makes every heading start at the same
+                vertical position regardless of title/body length; the extra
+                whitespace now falls at the bottom of the shorter cards.
+              */}
               <MagneticCard
                 strength={0.08}
                 className="h-full w-full"
-                innerClassName="flex h-full flex-col justify-between gap-10 p-8 lg:p-10"
+                innerClassName="flex h-full flex-col gap-10 p-8 lg:p-10"
               >
                 <RevealBorder tone={i === 0 ? 'accent' : 'muted'} />
 

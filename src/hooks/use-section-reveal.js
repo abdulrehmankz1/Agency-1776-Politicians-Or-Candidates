@@ -46,21 +46,22 @@ const DEFAULTS = {
   iconEase: 'power3.out',
   iconPosition: 0.18,
 
-  // Word-by-word heading reveal — SCROLL-SCRUBBED. Every heading on the
-  // page (h1–h6, plus any non-heading `SplitText mode="words"` block that
-  // renders as display type) gets its own ScrollTrigger, so headings reveal
-  // exactly as they enter the viewport rather than sharing a section-wide
-  // trigger. Tuned for a slower, more cinematic pace: the scrub range is
-  // wider, the stagger between words is longer, and the ease favours a
-  // long tail so the last words settle rather than snap.
-  wordLineStagger: 0.11,
+  // Word-by-word heading reveal — TIME-BASED. Every heading (h1–h6, plus any
+  // non-heading `SplitText mode="words"` block) gets its own ScrollTrigger
+  // that fires a short fixed timeline the moment it enters view. Previously
+  // this was a scroll-SCRUB whose completion was tied to how far the heading
+  // had travelled up the viewport (`top 88%` → `top 34%`): headings sitting
+  // low in a section, or on the last section before the footer, could stay
+  // half-revealed even after the reader had scrolled straight to them. A
+  // fixed ~0.5s timeline guarantees the whole heading resolves right after it
+  // enters the viewport regardless of scroll position or speed.
+  wordLineDuration: 0.45,
+  wordLineStagger: 0.04,
   wordLineEase: 'power3.out',
   wordLineY: 30,
   wordLineBlur: 6,
   wordLineRotate: -2.5,
-  wordLineScrubStart: 'top 88%',
-  wordLineScrubEnd: 'top 34%',
-  wordLineScrub: 0.85,
+  wordLineStart: 'top 85%',
 
   // Character-level heading reveal — the reference's signature curve.
   // Reserved for hero H1s.
@@ -104,6 +105,7 @@ const normalizeOptions = (options) => {
     merged.bodyDuration = options.wordDuration
     merged.charDuration = options.wordDuration
     merged.lineDuration = options.wordDuration
+    merged.wordLineDuration = options.wordDuration
   }
   if (options.wordStagger !== undefined) {
     merged.headingStagger = options.wordStagger
@@ -141,7 +143,21 @@ export const useSectionReveal = (options = {}) => {
 
     const scope = scopeRef.current
 
-    const ctx = gsap.context(() => {
+    /*
+     * These reveals HIDE content (autoAlpha 0 / yPercent) and only un-hide it
+     * when a ScrollTrigger fires. On touch devices that scroll-driven reveal
+     * is unreliable (ScrollSmoother runs with normalizeScroll + smoothTouch 0
+     * and there is no fine pointer), which could leave whole sections blank —
+     * the exact mobile "no content" bug. So we gate the entire hide-and-reveal
+     * behind a desktop-only media query (wide viewport + fine pointer). On
+     * phones/tablets the callback never runs, nothing is hidden, and the
+     * content renders immediately in its natural, fully-visible state.
+     * gsap.matchMedia also reverts cleanly if the viewport crosses the
+     * breakpoint, so a desktop→mobile resize restores any hidden content.
+     */
+    const mm = gsap.matchMedia()
+    mm.add('(min-width: 1024px) and (pointer: fine)', () => {
+      const ctx = gsap.context(() => {
       const borders = scope.querySelectorAll('[data-reveal="border"]')
       const icons = scope.querySelectorAll('[data-reveal="icon"]')
       const chars = scope.querySelectorAll('[data-reveal="char"]')
@@ -314,25 +330,31 @@ export const useSectionReveal = (options = {}) => {
         })
 
         groups.forEach((els, triggerEl) => {
+          // Fire the reveal as a short fixed timeline on enter (not a scrub),
+          // and never reverse it — once a heading has shown it stays shown, so
+          // a reader can't scroll it back into a half-hidden state.
           gsap.to(els, {
             autoAlpha: 1,
             y: 0,
             rotate: 0,
             filter: 'blur(0px)',
+            duration: opts.wordLineDuration,
             ease: opts.wordLineEase,
             stagger: opts.wordLineStagger,
             scrollTrigger: {
               trigger: triggerEl,
-              start: opts.wordLineScrubStart,
-              end: opts.wordLineScrubEnd,
-              scrub: opts.wordLineScrub,
+              start: opts.wordLineStart,
+              toggleActions: 'play none none none',
             },
           })
         })
       }
-    }, scope)
+      }, scope)
 
-    return () => ctx.revert()
+      return () => ctx.revert()
+    })
+
+    return () => mm.revert()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [opts.start, opts.toggleActions])
 

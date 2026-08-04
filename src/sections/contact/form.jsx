@@ -12,6 +12,7 @@ import { CONTACT_PAGE } from '@/constants/campaign'
 import { useScrubHeading } from '@/hooks/use-scrub-heading'
 import { useSectionReveal } from '@/hooks/use-section-reveal'
 import { cn } from '@/utils/cn'
+import { ScrollTrigger } from '@/utils/register-gsap'
 
 /*
  * Underline-style input primitive. Shared for text/tel/email/select/textarea.
@@ -22,11 +23,11 @@ const FieldShell = ({ index, label, required, error, children }) => (
   <div className="relative">
     <label
       className={cn(
-        'flex flex-wrap items-baseline gap-3 text-[0.72rem] uppercase tracking-[0.28em]',
+        'flex flex-wrap items-baseline gap-3 text-[0.82rem] uppercase tracking-[0.28em]',
         error ? 'text-accent' : 'text-foreground/60',
       )}
     >
-      <span className="font-mono text-[0.7rem] text-accent">
+      <span className="font-mono text-[0.8rem] text-accent">
         {String(index).padStart(2, '0')}
       </span>
       <span>
@@ -34,7 +35,7 @@ const FieldShell = ({ index, label, required, error, children }) => (
         {required ? <span aria-hidden="true"> *</span> : null}
       </span>
       {error && (
-        <span className="ml-auto font-mono text-[0.65rem] normal-case tracking-[0.2em] text-accent">
+        <span className="ml-auto font-mono text-[0.75rem] normal-case tracking-[0.2em] text-accent">
           {error}
         </span>
       )}
@@ -52,6 +53,38 @@ const initialFormState = () => {
   return state
 }
 
+/*
+ * Progressive US phone formatter. Strips everything but digits, drops an
+ * optional leading country-code "1", caps at 10 national digits, and lays
+ * them out as `(231) 456-7890` as the user types. Because it re-derives the
+ * value from digits on every keystroke, the field can only ever hold a
+ * complete 10-digit number or a partial on the way to one — never stray
+ * characters or an over-long string.
+ */
+const formatUsPhone = (raw) => {
+  let digits = raw.replace(/\D/g, '')
+  if (digits.length > 10 && digits.startsWith('1')) digits = digits.slice(1)
+  digits = digits.slice(0, 10)
+  const area = digits.slice(0, 3)
+  const prefix = digits.slice(3, 6)
+  const line = digits.slice(6, 10)
+  if (digits.length > 6) return `(${area}) ${prefix}-${line}`
+  if (digits.length > 3) return `(${area}) ${prefix}`
+  if (digits.length > 0) return `(${area}`
+  return ''
+}
+
+/*
+ * A phone value counts as "complete" only at a full 10-digit US number (an
+ * optional leading "1" country code is allowed). Anything in between — the
+ * partial numbers the client flagged (e.g. "(231) 2") — is rejected.
+ */
+const isCompletePhone = (value) => {
+  const digits = value.replace(/\D/g, '')
+  if (digits.length === 11 && digits.startsWith('1')) return true
+  return digits.length === 10
+}
+
 const validate = (values) => {
   const errors = {}
   for (const f of CONTACT_PAGE.form.fields) {
@@ -62,6 +95,12 @@ const validate = (values) => {
   const email = values.email?.trim()
   if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     errors.email = 'Invalid email'
+  }
+  // Phone is optional, but a partially-typed number is worse than none —
+  // require a complete 10-digit number or an empty field.
+  const phone = values.phone?.trim()
+  if (phone && !isCompletePhone(phone)) {
+    errors.phone = 'Enter a complete 10-digit number'
   }
   return errors
 }
@@ -74,16 +113,19 @@ const ContactForm = () => {
   const [errors, setErrors] = useState({})
   const [status, setStatus] = useState('idle') // idle | submitting | success | error
 
-  const update = (name) => (event) => {
-    setValues((v) => ({ ...v, [name]: event.target.value }))
-    if (errors[name]) {
-      setErrors((prev) => {
-        const next = { ...prev }
-        delete next[name]
-        return next
-      })
+  const update =
+    (name, format) =>
+    (event) => {
+      const value = format ? format(event.target.value) : event.target.value
+      setValues((v) => ({ ...v, [name]: value }))
+      if (errors[name]) {
+        setErrors((prev) => {
+          const next = { ...prev }
+          delete next[name]
+          return next
+        })
+      }
     }
-  }
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -127,8 +169,8 @@ const ContactForm = () => {
           {/* Left column — heading + intro, sticky on lg. */}
           <div className="col-span-12 lg:col-span-5">
             <div className="lg:sticky lg:top-[8rem]">
-              <div className="flex items-center gap-3 text-[0.72rem] uppercase tracking-[0.28em] text-foreground/60">
-                <span className="border border-muted px-2 py-0.5 font-mono text-[0.7rem] text-foreground/80">
+              <div className="flex items-center gap-3 text-[0.82rem] uppercase tracking-[0.28em] text-foreground/60">
+                <span className="border border-muted px-2 py-0.5 font-mono text-[0.8rem] text-foreground/80">
                   02
                 </span>
                 <span
@@ -157,7 +199,23 @@ const ContactForm = () => {
             <div className="relative bg-background p-6 sm:p-10 lg:p-12">
               <RevealBorder tone="muted" />
 
-              <AnimatePresence mode="wait" initial={false}>
+              <AnimatePresence
+                mode="wait"
+                initial={false}
+                onExitComplete={() => {
+                  // Swapping the tall form for the short success card (and
+                  // back on reset) changes this section's height by ~700px.
+                  // Every ScrollTrigger on the page — the hero reveal, this
+                  // heading's scrub, the footer reveal — cached its
+                  // start/end scroll positions against the previous layout,
+                  // so without a recompute those decorative reveals sit at
+                  // stale positions and fade their content toward zero
+                  // opacity as the page scrolls (the "graphics above the
+                  // footer go blank" post-submit bug). Refresh once the swap
+                  // has settled the new layout.
+                  requestAnimationFrame(() => ScrollTrigger.refresh())
+                }}
+              >
                 {status === 'success' ? (
                   <motion.div
                     key="success"
@@ -247,8 +305,14 @@ const ContactForm = () => {
                           <input
                             name={field.name}
                             type={field.type}
+                            inputMode={
+                              field.type === 'tel' ? 'tel' : undefined
+                            }
                             value={values[field.name]}
-                            onChange={update(field.name)}
+                            onChange={update(
+                              field.name,
+                              field.type === 'tel' ? formatUsPhone : undefined,
+                            )}
                             placeholder={field.placeholder}
                             disabled={submitting}
                             aria-invalid={!!errors[field.name]}

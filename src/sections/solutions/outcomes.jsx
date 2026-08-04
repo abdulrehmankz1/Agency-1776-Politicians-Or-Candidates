@@ -23,8 +23,8 @@ const Outcomes = () => {
               anchors the outcomes list scrolling next to it. */}
           <div className="col-span-12 lg:col-span-5">
             <div className="lg:sticky lg:top-[8rem]">
-              <div className="flex items-center gap-3 text-[0.72rem] uppercase tracking-[0.28em] text-foreground/60">
-                <span className="border border-muted px-2 py-0.5 font-mono text-[0.7rem] text-foreground/80">
+              <div className="flex items-center gap-3 text-[0.82rem] uppercase tracking-[0.28em] text-foreground/60">
+                <span className="border border-muted px-2 py-0.5 font-mono text-[0.8rem] text-foreground/80">
                   05
                 </span>
                 <span
@@ -64,7 +64,7 @@ const Outcomes = () => {
                   <span
                     data-reveal="icon"
                     aria-hidden="true"
-                    className="font-mono text-[0.7rem] uppercase tracking-[0.28em] text-accent"
+                    className="font-mono text-[0.8rem] uppercase tracking-[0.28em] text-accent"
                   >
                     {String(i + 1).padStart(2, '0')}
                   </span>

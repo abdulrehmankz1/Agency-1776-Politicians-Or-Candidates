@@ -35,7 +35,17 @@ export const useScrubHeading = (options = {}) => {
 
     const el = ref.current
 
-    const ctx = gsap.context(() => {
+    /*
+     * Scrub reveals fade words from low opacity up as the reader scrolls. On
+     * touch devices the scroll-scrub is unreliable and can leave headings
+     * stuck at their dimmed start state, so we gate the whole effect to
+     * desktop (wide viewport + fine pointer). Elsewhere the words are never
+     * touched and render at full opacity immediately. matchMedia reverts on
+     * a breakpoint change, restoring the headings on a desktop→mobile resize.
+     */
+    const mm = gsap.matchMedia()
+    mm.add('(min-width: 1024px) and (pointer: fine)', () => {
+      const ctx = gsap.context(() => {
       const words = el.querySelectorAll('[data-scrub="word"]')
       if (!words.length) return
 
@@ -57,9 +67,12 @@ export const useScrubHeading = (options = {}) => {
           scrub: opts.scrub,
         },
       })
-    }, el)
+      }, el)
 
-    return () => ctx.revert()
+      return () => ctx.revert()
+    })
+
+    return () => mm.revert()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [opts.start, opts.end, opts.scrub])
 

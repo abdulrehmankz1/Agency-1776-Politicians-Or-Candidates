@@ -347,7 +347,7 @@ const MobileMenu = ({ heroCta, heroCtaHref, activeId, onClose }) => {
                 : 'text-foreground hover:text-accent',
             )}
           >
-            <span className="font-mono text-[0.65rem] tracking-[0.28em] text-foreground/45">
+            <span className="font-mono text-[0.75rem] tracking-[0.28em] text-foreground/65">
               0{i + 1}
             </span>
             <span>{link.label}</span>
@@ -453,7 +453,7 @@ const NavLink = ({ label, href, active }) => {
       />
 
       {/* text mask */}
-      <span className="font-display relative block overflow-hidden text-sm uppercase leading-none tracking-[0.2em]">
+      <span className="font-display relative block overflow-hidden text-base uppercase leading-none tracking-[0.2em]">
         {/* subtle underline accent that swipes in on hover — no blur, no circle */}
         <span
           data-nav="glow"
@@ -465,7 +465,7 @@ const NavLink = ({ label, href, active }) => {
           data-nav="top"
           className={cn(
             'block will-change-transform',
-            active ? 'text-foreground' : 'text-foreground/75',
+            active ? 'text-foreground' : 'text-foreground/90',
           )}
         >
           {label}

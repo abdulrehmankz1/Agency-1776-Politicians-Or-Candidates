@@ -320,7 +320,7 @@ const CustomCursor = () => {
 
         {/* View pill — morphs in on portfolio / preview surfaces */}
         <motion.span
-          className="absolute flex items-center gap-2 whitespace-nowrap rounded-full bg-foreground px-4 py-2 text-[0.6rem] font-black uppercase tracking-[0.28em] text-background shadow-[0_10px_30px_rgba(191,10,48,0.35)]"
+          className="absolute flex items-center gap-2 whitespace-nowrap rounded-full bg-foreground px-4 py-2 text-[0.7rem] font-black uppercase tracking-[0.28em] text-background shadow-[0_10px_30px_rgba(191,10,48,0.35)]"
           style={{
             left: 22,
             top: -18,
