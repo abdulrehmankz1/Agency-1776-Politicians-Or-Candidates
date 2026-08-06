@@ -2,10 +2,10 @@
 
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { AnimatePresence, motion } from 'motion/react'
 
 import CtaButton from '@/components/cta-button'
-import Icon from '@/components/icon'
 import ThemeToggle from '@/components/theme-toggle'
 import { AGENCY, HERO } from '@/constants/campaign'
 import { gsap, ScrollTrigger } from '@/utils/register-gsap'
@@ -46,6 +46,14 @@ const LINKS = [
 const normaliseCtaHref = (href) =>
   href && href.startsWith('#') ? `/contact` : href
 
+// A nav link is active when its route matches the current page. Home ("/")
+// only matches exactly; every other route also matches its nested sub-paths
+// (e.g. /work stays active on /work/some-slug).
+const isRouteActive = (href, pathname) =>
+  href === '/'
+    ? pathname === '/'
+    : pathname === href || (pathname?.startsWith(`${href}/`) ?? false)
+
 /*
  * Fixed primary navbar. Sits directly below the TopBrandBar.
  *
@@ -68,6 +76,7 @@ const normaliseCtaHref = (href) =>
 const Navbar = () => {
   const rootRef = useRef(null)
   const hamburgerRef = useRef(null)
+  const pathname = usePathname()
   const [activeId, setActiveId] = useState(null)
   const [menuOpen, setMenuOpen] = useState(false)
   const heroCta = HERO.ctas[0]
@@ -177,16 +186,23 @@ const Navbar = () => {
         className="fixed inset-x-0 top-10 z-50 border-b border-muted/50 bg-background/80 backdrop-blur-md"
       >
         <div className="mx-auto flex h-[68px] max-w-[1600px] items-center px-6 lg:px-10">
-          {/* Brand mark */}
+          {/* Brand mark — AGENCY 1776 lockup, light/dark variant swapped by theme */}
           <Link
             href="/"
-            className="group flex items-center gap-3"
+            className="group flex min-w-0 shrink items-center"
+            aria-label={`${AGENCY.brand} — home`}
             data-cursor="link"
           >
-            <Icon name="star" className="h-6 w-6 text-accent" strokeWidth={2} />
-            <span className="font-display text-lg uppercase tracking-[0.18em] leading-none">
-              {AGENCY.brand}
-            </span>
+            <img
+              src="/logo-agency.png"
+              alt={AGENCY.brand}
+              className="logo-light h-9 w-auto md:h-10"
+            />
+            <img
+              src="/logo-agency-dark.png"
+              alt={AGENCY.brand}
+              className="logo-dark h-9 w-auto md:h-10"
+            />
           </Link>
 
           {/* Desktop inline nav (lg+) — unchanged. */}
@@ -199,7 +215,7 @@ const Navbar = () => {
                 key={link.id}
                 label={link.label}
                 href={link.href}
-                active={activeId === link.id}
+                active={isRouteActive(link.href, pathname) || activeId === link.id}
               />
             ))}
           </nav>
@@ -239,6 +255,7 @@ const Navbar = () => {
             heroCta={heroCta}
             heroCtaHref={normalisedCtaHref}
             activeId={activeId}
+            pathname={pathname}
             onClose={closeMenu}
           />
         )}
@@ -278,7 +295,7 @@ const HamburgerIcon = ({ open }) => (
  * nav link staggers in on its own delay so the reveal feels intentional. The
  * drawer's own scroll is enabled so long lists still work on landscape phones.
  */
-const MobileMenu = ({ heroCta, heroCtaHref, activeId, onClose }) => {
+const MobileMenu = ({ heroCta, heroCtaHref, activeId, pathname, onClose }) => {
   const firstLinkRef = useRef(null)
 
   useEffect(() => {
@@ -305,11 +322,17 @@ const MobileMenu = ({ heroCta, heroCtaHref, activeId, onClose }) => {
           Sits BELOW the TopBrandBar (10 px tall) so we push down by that
           amount and by the navbar height so nothing double-stacks. */}
       <div className="flex items-center justify-between px-6 pb-8 pt-[7rem]">
-        <span className="flex items-center gap-3">
-          <Icon name="star" className="h-6 w-6 text-accent" strokeWidth={2} />
-          <span className="font-display text-lg uppercase tracking-[0.18em] leading-none">
-            {AGENCY.brand}
-          </span>
+        <span className="flex items-center">
+          <img
+            src="/logo-agency.png"
+            alt={AGENCY.brand}
+            className="logo-light h-9 w-auto"
+          />
+          <img
+            src="/logo-agency-dark.png"
+            alt={AGENCY.brand}
+            className="logo-dark h-9 w-auto"
+          />
         </span>
       </div>
 
@@ -318,7 +341,10 @@ const MobileMenu = ({ heroCta, heroCtaHref, activeId, onClose }) => {
         aria-label="Primary mobile"
         className="flex flex-1 flex-col justify-center gap-1 px-6"
       >
-        {LINKS.map((link, i) => (
+        {LINKS.map((link, i) => {
+          const active =
+            isRouteActive(link.href, pathname) || activeId === link.id
+          return (
           <MotionLink
             key={link.id}
             ref={i === 0 ? firstLinkRef : null}
@@ -342,7 +368,7 @@ const MobileMenu = ({ heroCta, heroCtaHref, activeId, onClose }) => {
             className={cn(
               'font-display group flex items-center gap-5 border-b border-muted/40 py-4 uppercase leading-none tracking-[0.02em] transition-colors',
               'text-[clamp(2.25rem,8vw,3.75rem)]',
-              activeId === link.id
+              active
                 ? 'text-accent'
                 : 'text-foreground hover:text-accent',
             )}
@@ -355,13 +381,14 @@ const MobileMenu = ({ heroCta, heroCtaHref, activeId, onClose }) => {
               aria-hidden="true"
               className={cn(
                 'ml-auto h-px w-8 origin-right transition-all duration-500',
-                activeId === link.id
+                active
                   ? 'scale-x-100 bg-accent'
                   : 'scale-x-0 bg-accent group-hover:scale-x-100',
               )}
             />
           </MotionLink>
-        ))}
+          )
+        })}
       </nav>
 
       {/* Footer row — CTA. Border-top matches the desktop chrome. */}

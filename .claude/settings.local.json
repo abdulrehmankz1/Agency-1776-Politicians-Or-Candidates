@@ -95,7 +95,13 @@
       "Bash(node -e \"try{require.resolve\\('playwright'\\);console.log\\('playwright ok'\\)}catch\\(e\\){try{require.resolve\\('puppeteer'\\);console.log\\('puppeteer ok'\\)}catch\\(e2\\){console.log\\('none'\\)}}\")",
       "Bash(node run.js \"C:/Users/user/AppData/Local/Temp/claude/C--Users-user-Documents-development-claude-projects-Agency-1776-Politicians-Or-Candidates/cb5926c0-32b3-42b5-9c4e-5f6189f5789d/scratchpad/shot-legal.js\")",
       "Bash(node run.js \"C:/Users/user/AppData/Local/Temp/claude/C--Users-user-Documents-development-claude-projects-Agency-1776-Politicians-Or-Candidates/cb5926c0-32b3-42b5-9c4e-5f6189f5789d/scratchpad/shot-terms-placeholders.js\")",
-      "Bash(netstat -ano)"
+      "Bash(netstat -ano)",
+      "Bash(cp \"C:/Users/user/Documents/development/claude-projects/Agency-1776-Nonprofit/public/logo-agency.png\" \"C:/Users/user/Documents/development/claude-projects/Agency-1776-Politicians-Or-Candidates/public/logo-agency.png\")",
+      "Bash(cp \"C:/Users/user/Documents/development/claude-projects/Agency-1776-Nonprofit/public/logo-agency-dark.png\" \"C:/Users/user/Documents/development/claude-projects/Agency-1776-Politicians-Or-Candidates/public/logo-agency-dark.png\")",
+      "Bash(npx eslint *)",
+      "PowerShell($c = Get-NetTCPConnection -LocalPort 3000 -State Listen -ErrorAction SilentlyContinue; if \\($c\\) { $c.OwningProcess | Select-Object -Unique | ForEach-Object { try { Stop-Process -Id $_ -Force -ErrorAction Stop; \"killed $_\" } catch {} } } else { \"no listener on 3000\" })",
+      "Bash(node run.js \"C:/Users/user/AppData/Local/Temp/claude/C--Users-user-Documents-development-claude-projects-Agency-1776-Politicians-Or-Candidates/97696b51-c324-438c-ac33-6b5962bc78ee/scratchpad/shot-legal.js\")",
+      "Bash(node run.js \"C:/Users/user/AppData/Local/Temp/claude/C--Users-user-Documents-development-claude-projects-Agency-1776-Politicians-Or-Candidates/97696b51-c324-438c-ac33-6b5962bc78ee/scratchpad/scroll-legal.js\")"
     ]
   }
 }

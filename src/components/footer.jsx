@@ -1,12 +1,14 @@
 'use client'
 
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 import Icon from '@/components/icon'
 import RevealBorder from '@/components/reveal-border'
 import SplitText from '@/components/split-text'
 import { AGENCY } from '@/constants/campaign'
 import { useSectionReveal } from '@/hooks/use-section-reveal'
+import { cn } from '@/utils/cn'
 import { scrollToTop } from '@/utils/scroll-to'
 
 /*
@@ -55,7 +57,26 @@ const Footer = () => {
         {/* Big wordmark up top acts as a visual signature. */}
         <div className="grid grid-cols-12 gap-8 border-b border-muted pb-16">
           <div className="col-span-12 lg:col-span-8">
-            <div className="flex items-center gap-3 text-[0.82rem] uppercase tracking-[0.28em] text-foreground/65">
+            {/* AGENCY 1776 lockup — light/dark variant swapped by theme */}
+            <Link
+              href="/"
+              data-cursor="link"
+              aria-label={`${AGENCY.brand} — home`}
+              className="inline-flex items-center"
+            >
+              <img
+                src="/logo-agency.png"
+                alt={AGENCY.brand}
+                className="logo-light h-12 w-auto"
+              />
+              <img
+                src="/logo-agency-dark.png"
+                alt={AGENCY.brand}
+                className="logo-dark h-12 w-auto"
+              />
+            </Link>
+
+            <div className="mt-8 flex items-center gap-3 text-[0.82rem] uppercase tracking-[0.28em] text-foreground/65">
               <span
                 data-reveal="icon"
                 aria-hidden="true"
@@ -156,12 +177,6 @@ const Footer = () => {
                 <MetaLink key={item.label} href={item.href} label={item.label} />
               ))}
             </nav>
-            <span
-              data-reveal="icon"
-              aria-hidden="true"
-              className="hidden h-px w-10 bg-muted md:block"
-            />
-            <span className="font-mono text-foreground/55">v.01</span>
           </div>
         </div>
       </div>
@@ -221,31 +236,36 @@ const FooterGroup = ({ title, index, items }) => (
  * hash href — see the site-wide navigation audit.
  */
 const FooterLink = ({ href, label, onClick }) => {
-  const className =
-    'group inline-flex items-baseline gap-3 text-left text-base font-medium text-foreground/80 transition-colors hover:text-foreground'
+  const pathname = usePathname()
+  // Active when the link's route matches the current page. Home ("/") only
+  // matches exactly; every other route also matches its nested sub-paths
+  // (e.g. /work active on /work/some-slug). The scroll button (no href) is
+  // never marked active.
+  const isActive = href
+    ? href === '/'
+      ? pathname === '/'
+      : pathname === href || pathname?.startsWith(`${href}/`)
+    : false
+
+  const className = cn(
+    'group inline-flex items-baseline text-left text-base font-medium transition-colors',
+    isActive
+      ? 'text-accent'
+      : 'text-foreground/80 hover:text-foreground',
+  )
 
   const content = (
-    <>
-      {/* Accent leader dash — grows on hover. */}
-      <span
-        aria-hidden="true"
-        className="mb-[0.3em] h-px w-4 origin-left scale-x-100 bg-accent transition-transform duration-500 ease-out group-hover:scale-x-[2]"
-      />
-      {/* Label + underline living inside a reserved padding band so descenders
-          never overlap the underline. */}
-      <span className="relative inline-block pb-3 leading-[1.15]">
-        {label}
-        <span
-          aria-hidden="true"
-          className="pointer-events-none absolute bottom-0 left-0 h-px w-full origin-left scale-x-0 bg-accent transition-transform duration-500 ease-out group-hover:scale-x-100"
-        />
-      </span>
-    </>
+    <span className="inline-block leading-[1.15]">{label}</span>
   )
 
   if (href) {
     return (
-      <Link href={href} data-cursor="link" className={className}>
+      <Link
+        href={href}
+        data-cursor="link"
+        aria-current={isActive ? 'page' : undefined}
+        className={className}
+      >
         {content}
       </Link>
     )

@@ -2,17 +2,18 @@ import { normalizePhoneForSubmit } from '@/lib/phone'
 
 /*
  * Fan-out targets, in order:
- *   0 — the contact form's own GHL workflow webhook.
- *   1 — the compliance webhook that drives the consent / subscription
- *       workflow, shared by every form on this site that collects a phone
- *       number. Do not swap this for a form-specific URL.
+ *   0 — the contact form submission webhook. Drives the contact-form GHL
+ *       workflow (contact create/update + the form's own automations).
+ *   1 — the SMS consent webhook. Drives the SMS opt-in / subscription
+ *       workflow from the two consent checkboxes (sms_updates / sms_promo).
  *
- * Both receive the identical payload — the compliance workflow decides what it
- * reads, so nothing is stripped for it. Webhook URLs stay server-side only.
+ * Both receive the identical payload — the SMS workflow reads the consent
+ * fields and acts only when they are "Yes", so nothing is stripped for it.
+ * Webhook URLs stay server-side only.
  */
 const WEBHOOK_URLS = [
   'https://services.leadconnectorhq.com/hooks/sXAEbVurmQaTnNok2hXX/webhook-trigger/wccMP5j9s0A5F31CTmKz',
-  'https://services.leadconnectorhq.com/hooks/sXAEbVurmQaTnNok2hXX/webhook-trigger/xzXNYKJboy6hpeTkbSFJ',
+  'https://services.leadconnectorhq.com/hooks/sXAEbVurmQaTnNok2hXX/webhook-trigger/0kjJIBPhZUKQ9T6B0PqO',
 ]
 
 /*

@@ -1,352 +1,395 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-import {
-  motion,
-  useMotionTemplate,
-  useMotionValue,
-  useSpring,
-  useTransform,
-} from 'motion/react'
+import { useEffect, useRef } from 'react'
 
-/*
- * Custom Motion cursor.
+import { gsap } from '@/utils/register-gsap'
+
+const STAR_POINTS = '50,4 61,36 96,36 68,58 79,92 50,72 21,92 32,58 4,36 39,36'
+const TRAIL_POOL_SIZE = 24
+const TRAIL_SPAWN_DIST = 22 // px moved between spawns — keeps particle count in check
+const TRAIL_SPAWN_DIST_SQ = TRAIL_SPAWN_DIST * TRAIL_SPAWN_DIST
+
+/**
+ * Premium adaptive cursor — ported from the shared 1776 division cursor so
+ * every site reads identically.
  *
- * Three GPU-composited layers, each on its own spring so the pointer reads as
- * a single moving object with real inertia rather than a stack of parallel
- * dots:
+ * Structure:
+ *   - Ring — larger circle with soft-lag follow, used for state paint.
+ *   - Dot  — small 5-point star (matching the site's star motif) tracking the
+ *            pointer tightly with a very slow perpetual rotation. On
+ *            button/link states it fades out.
+ *   - Trail — a pool of 24 pre-created SVG stars parked at (0,0, opacity 0).
+ *            Every ~22px of pointer travel, the next one in the ring buffer is
+ *            set to the pointer location and tweened out (opacity → 0, scale →
+ *            0.35, tiny random drift + rotation). Pooling means zero DOM churn
+ *            and a hard cap on live particles.
+ *   - Eye  — the "view" affordance for portfolio/media hover states.
  *
- *   1. Glow  — soft red radial bloom, slowest spring. Ambient depth.
- *   2. Trail — angular red blade, medium spring. Directional: rotates with
- *              the smoothed velocity vector, stretches along its axis on
- *              fast motion, and picks up a real `filter: blur()` motion-blur
- *              proportional to speed.
- *   3. Core  — sharp foreground-fill diamond, fastest spring. Always
- *              on-target so clicking feels precise.
- *
- * Hover intelligence:
- *   - button  — anchors, buttons, [role="button"], data-cursor="link"/"button".
- *               Every layer scales up, the trail glow intensifies, the
- *               velocity-driven stretch continues to give a "magnetic drag"
- *               feel that composes with useMagnetic on the CTA buttons.
- *   - view    — data-cursor="view"/"media". Trail expands into a soft red
- *               halo behind a VIEW pill; core shrinks to a small tick so it
- *               reads as a badge, not a cursor.
- *   - text    — <p> and data-cursor="text". Core shrinks and glow dims so
- *               the cursor stays out of the way while reading. Text
- *               selection is unaffected (browser handles that with
- *               mousedown+drag regardless of the visible cursor style).
- *   - image   — <img> and data-cursor="image". Everything scales up and the
- *               glow brightens for a "preview" feel.
- *
- * Fine-pointer only. On coarse-pointer devices the component returns null
- * and nothing mounts, so touch behaviour is unchanged. While the pointer is
- * over a form-input (input, textarea, select, contenteditable), every layer
- * fades out so the browser's native I-beam owns the surface.
+ * Motion runs entirely on transform + opacity (compositor-only). While the
+ * cursor is active it marks <html data-custom-cursor="true"> so globals.css
+ * hides the native pointer. Skipped entirely on touch devices
+ * (matchMedia hover: none) and for users with prefers-reduced-motion — in
+ * which case the native cursor is left fully intact.
  */
-
-// Springs — the entire feel of the cursor lives in these constants.
-const CORE_SPRING = { damping: 30, stiffness: 500, mass: 0.5 }
-const TRAIL_SPRING = { damping: 25, stiffness: 260, mass: 0.85 }
-const GLOW_SPRING = { damping: 22, stiffness: 170, mass: 1.1 }
-const ROTATE_SPRING = { damping: 24, stiffness: 260, mass: 0.4 }
-const SCALE_SPRING = { damping: 22, stiffness: 320, mass: 0.5 }
-const STRETCH_SPRING = { damping: 25, stiffness: 400, mass: 0.4 }
-const BLUR_SPRING = { damping: 22, stiffness: 400, mass: 0.4 }
-
-const MODES = {
-  default: { coreScale: 1, trailScale: 1, glowOpacity: 0.32, showPill: false },
-  button: {
-    coreScale: 1.4,
-    trailScale: 1.9,
-    glowOpacity: 0.85,
-    showPill: false,
-  },
-  view: {
-    coreScale: 0.45,
-    trailScale: 4.2,
-    glowOpacity: 0.65,
-    showPill: true,
-    label: 'VIEW',
-  },
-  text: {
-    coreScale: 0.35,
-    trailScale: 0.65,
-    glowOpacity: 0.12,
-    showPill: false,
-  },
-  image: {
-    coreScale: 1.9,
-    trailScale: 2.8,
-    glowOpacity: 0.75,
-    showPill: false,
-  },
-}
-
-const EDITABLE = 'input, textarea, select, [contenteditable="true"]'
-
 const CustomCursor = () => {
-  const [fine, setFine] = useState(false)
-  const [mode, setMode] = useState('default')
-  const [suppressed, setSuppressed] = useState(false)
-
-  const rawX = useMotionValue(-200)
-  const rawY = useMotionValue(-200)
-
-  // Three follow springs — deliberately different characters so the layers
-  // don't move as one glob.
-  const coreX = useSpring(rawX, CORE_SPRING)
-  const coreY = useSpring(rawY, CORE_SPRING)
-  const trailX = useSpring(rawX, TRAIL_SPRING)
-  const trailY = useSpring(rawY, TRAIL_SPRING)
-  const glowX = useSpring(rawX, GLOW_SPRING)
-  const glowY = useSpring(rawY, GLOW_SPRING)
-
-  // Rotation & scale springs.
-  const rotate = useSpring(0, ROTATE_SPRING)
-  const coreScale = useSpring(1, SCALE_SPRING)
-  const trailScale = useSpring(1, SCALE_SPRING)
-  const glowOpacity = useSpring(0, SCALE_SPRING)
-
-  // Velocity-driven directional stretch + motion blur.
-  const stretch = useSpring(1, STRETCH_SPRING)
-  const blur = useSpring(0, BLUR_SPRING)
-
-  // Composed motion values.
-  const blurFilter = useMotionTemplate`blur(${blur}px)`
-  const trailScaleX = useTransform(
-    [trailScale, stretch],
-    ([s, x]) => s * x,
-  )
-  const trailScaleY = useTransform(
-    [trailScale, stretch],
-    ([s, x]) => s * (2 - x),
-  )
-
-  const modeRef = useRef(mode)
-  const suppressedRef = useRef(suppressed)
-  const lastSample = useRef({ x: -200, y: -200, t: 0 })
+  const dotRef = useRef(null)
+  const dotStarRef = useRef(null)
+  const ringRef = useRef(null)
+  const eyeRef = useRef(null)
+  const trailContainerRef = useRef(null)
 
   useEffect(() => {
-    modeRef.current = mode
-  }, [mode])
-  useEffect(() => {
-    suppressedRef.current = suppressed
-  }, [suppressed])
+    if (typeof window === 'undefined') return undefined
+    if (window.matchMedia('(hover: none)').matches) return undefined
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+      return undefined
 
-  // Fine-pointer gate.
-  useEffect(() => {
-    if (typeof window === 'undefined' || !window.matchMedia) return undefined
-    const mq = window.matchMedia('(pointer: fine)')
-    const check = () => setFine(mq.matches)
-    check()
-    mq.addEventListener('change', check)
-    return () => mq.removeEventListener('change', check)
-  }, [])
+    const dot = dotRef.current
+    const dotStar = dotStarRef.current
+    const ring = ringRef.current
+    const eye = eyeRef.current
+    const trailContainer = trailContainerRef.current
+    if (!dot || !dotStar || !ring || !eye || !trailContainer) return undefined
 
-  // While the custom cursor is active, mark <html> so globals.css can hide
-  // the native cursor. Doing it from JS (rather than relying on
-  // `@media (pointer: fine)` at the CSS layer) means the rule applies
-  // exactly when the component is actually drawing a pointer, and reverts
-  // cleanly on unmount / coarse-pointer switch.
-  useEffect(() => {
-    if (typeof document === 'undefined') return undefined
-    if (!fine) return undefined
+    // Hide the native pointer only now that we know the custom cursor is
+    // actually drawing (fine pointer, motion allowed). globals.css keys off
+    // this attribute; we remove it on cleanup so the OS cursor returns.
     const root = document.documentElement
     root.dataset.customCursor = 'true'
-    return () => {
-      delete root.dataset.customCursor
-    }
-  }, [fine])
 
-  useEffect(() => {
-    if (!fine) return undefined
-
-    const resolveMode = (t) => {
-      if (!(t instanceof Element)) return 'default'
-      if (t.closest('[data-cursor="view"], [data-cursor="media"]')) return 'view'
-      if (t.closest('[data-cursor="image"], img')) return 'image'
-      if (
-        t.closest(
-          'button, [role="button"], a, [data-cursor="link"], [data-cursor="button"]',
-        )
+    // Trail particle pool — SVG stars created imperatively so React never
+    // re-renders on cursor move. Pool is a ring buffer.
+    const pool = []
+    for (let i = 0; i < TRAIL_POOL_SIZE; i++) {
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+      svg.setAttribute('viewBox', '0 0 100 100')
+      svg.setAttribute('aria-hidden', 'true')
+      svg.style.cssText =
+        'position:fixed;left:0;top:0;width:9px;height:9px;pointer-events:none;opacity:0;will-change:transform,opacity;'
+      const poly = document.createElementNS(
+        'http://www.w3.org/2000/svg',
+        'polygon',
       )
-        return 'button'
-      if (t.closest('p, [data-cursor="text"]')) return 'text'
-      return 'default'
+      poly.setAttribute('points', STAR_POINTS)
+      poly.setAttribute('fill', 'currentColor')
+      svg.appendChild(poly)
+      trailContainer.appendChild(svg)
+      gsap.set(svg, { xPercent: -50, yPercent: -50 })
+      pool.push(svg)
+    }
+    let poolIdx = 0
+    let lastSpawnX = 0
+    let lastSpawnY = 0
+
+    gsap.set([dot, ring, eye], { xPercent: -50, yPercent: -50, opacity: 0 })
+    gsap.set(eye, { scale: 0.6 })
+
+    // Perpetual gentle rotation on the star core — 22s per full turn reads as
+    // ambient shimmer, never as spinning.
+    const spinTween = gsap.to(dotStar, {
+      rotation: 360,
+      duration: 22,
+      ease: 'none',
+      repeat: -1,
+      transformOrigin: '50% 50%',
+    })
+
+    // quickTo tweens: one per axis per element, reused every frame.
+    const dotX = gsap.quickTo(dot, 'x', { duration: 0.12, ease: 'power3' })
+    const dotY = gsap.quickTo(dot, 'y', { duration: 0.12, ease: 'power3' })
+    const ringX = gsap.quickTo(ring, 'x', { duration: 0.35, ease: 'power3' })
+    const ringY = gsap.quickTo(ring, 'y', { duration: 0.35, ease: 'power3' })
+    const eyeX = gsap.quickTo(eye, 'x', { duration: 0.32, ease: 'power3' })
+    const eyeY = gsap.quickTo(eye, 'y', { duration: 0.32, ease: 'power3' })
+
+    let visible = false
+
+    const spawnTrailStar = (x, y) => {
+      const p = pool[poolIdx]
+      poolIdx = (poolIdx + 1) % TRAIL_POOL_SIZE
+      if (!p) return
+
+      // ~15% of particles borrow the accent-red palette for a subtle
+      // patriotic shimmer; the rest are soft foreground/gray.
+      const useAccent = Math.random() < 0.15
+      p.style.color = useAccent
+        ? 'var(--color-accent)'
+        : 'var(--color-foreground)'
+
+      const driftX = (Math.random() - 0.5) * 18
+      const driftY = (Math.random() - 0.5) * 14 - 4 // slight upward bias
+      const startRot = Math.random() * 90
+      const startScale = 0.85 + Math.random() * 0.35
+      const duration = 0.75 + Math.random() * 0.35
+
+      gsap.killTweensOf(p)
+      gsap.set(p, {
+        x,
+        y,
+        opacity: useAccent ? 0.7 : 0.55,
+        scale: startScale,
+        rotation: startRot,
+      })
+      gsap.to(p, {
+        x: x + driftX,
+        y: y + driftY,
+        opacity: 0,
+        scale: 0.35,
+        rotation: startRot + 40,
+        duration,
+        ease: 'power2.out',
+      })
     }
 
-    const isEditable = (t) =>
-      t instanceof Element && !!t.closest(EDITABLE)
-
-    const handleMove = (event) => {
-      rawX.set(event.clientX)
-      rawY.set(event.clientY)
-      const target = event.target
-      if (isEditable(target)) {
-        if (!suppressedRef.current) setSuppressed(true)
-        return
+    const handleMove = (e) => {
+      const cx = e.clientX
+      const cy = e.clientY
+      if (!visible) {
+        gsap.to([dot, ring], { opacity: 1, duration: 0.4, ease: 'power2.out' })
+        visible = true
+        lastSpawnX = cx
+        lastSpawnY = cy
       }
-      if (suppressedRef.current) setSuppressed(false)
-      const next = resolveMode(target)
-      if (next !== modeRef.current) setMode(next)
-    }
+      dotX(cx)
+      dotY(cy)
+      ringX(cx)
+      ringY(cy)
+      eyeX(cx)
+      eyeY(cy)
 
-    window.addEventListener('mousemove', handleMove, { passive: true })
-
-    // rAF loop sampling the smoothed core spring — feeds rotation, stretch,
-    // and motion-blur values from the *visible* motion, not the raw pointer.
-    // That way tiny mouse jitter doesn't rotate/stretch the cursor; only
-    // real, sustained motion does.
-    let rafId = 0
-    const step = () => {
-      const now = performance.now()
-      const cx = coreX.get()
-      const cy = coreY.get()
-      const last = lastSample.current
-      const dt = Math.max(1, now - last.t)
-      const dx = cx - last.x
-      const dy = cy - last.y
-      const speed = Math.hypot(dx, dy) / dt
-
-      if (speed > 0.05) {
-        const angleDeg = (Math.atan2(dy, dx) * 180) / Math.PI
-        // Shortest-path unwrap so the spring never spins the long way around.
-        const cur = rotate.get()
-        const wrap = angleDeg + Math.round((cur - angleDeg) / 360) * 360
-        rotate.set(wrap)
+      // Distance-throttled trail spawn — hard cap on emission rate.
+      const dx = cx - lastSpawnX
+      const dy = cy - lastSpawnY
+      if (dx * dx + dy * dy >= TRAIL_SPAWN_DIST_SQ) {
+        spawnTrailStar(cx, cy)
+        lastSpawnX = cx
+        lastSpawnY = cy
       }
-
-      // Stretch peaks at 1.35 on fast moves — trail elongates along motion.
-      stretch.set(1 + Math.min(0.35, speed * 0.15))
-      // Motion blur peaks at ~6px on fast moves.
-      blur.set(Math.min(6, speed * 3))
-
-      lastSample.current = { x: cx, y: cy, t: now }
-      rafId = requestAnimationFrame(step)
     }
-    rafId = requestAnimationFrame(step)
+
+    // Reusable "state" transitions for the ring.
+    const applyState = (state) => {
+      // Reset eye by default — only "view"/"media" turn it on.
+      if (state !== 'view' && state !== 'media' && state !== 'image') {
+        gsap.to(eye, {
+          opacity: 0,
+          scale: 0.6,
+          duration: 0.22,
+          ease: 'power3.out',
+        })
+      }
+      switch (state) {
+        case 'button':
+          // Border uses `foreground` (not accent) so the ring stays visible on
+          // top of same-color buttons — e.g. the red primary button, where an
+          // accent-colored outline would vanish. `foreground` auto-adapts:
+          // near-black in light mode, light in dark mode.
+          gsap.to(ring, {
+            opacity: 1,
+            scale: 1.55,
+            backgroundColor:
+              'color-mix(in srgb, var(--color-accent) 22%, transparent)',
+            borderColor: 'var(--color-foreground)',
+            duration: 0.32,
+            ease: 'power3.out',
+          })
+          gsap.to(dot, { opacity: 0, duration: 0.2 })
+          break
+        case 'card':
+          gsap.to(ring, {
+            opacity: 1,
+            scale: 2.1,
+            backgroundColor:
+              'color-mix(in srgb, var(--color-foreground) 14%, transparent)',
+            borderColor: 'var(--color-foreground)',
+            duration: 0.4,
+            ease: 'power3.out',
+          })
+          gsap.to(dot, { opacity: 1, scale: 1.4, duration: 0.2 })
+          break
+        case 'link':
+          gsap.to(ring, {
+            opacity: 1,
+            scale: 1.6,
+            backgroundColor:
+              'color-mix(in srgb, var(--color-foreground) 14%, transparent)',
+            borderColor: 'var(--color-foreground)',
+            duration: 0.3,
+            ease: 'power3.out',
+          })
+          gsap.to(dot, { opacity: 0, duration: 0.2 })
+          break
+        case 'text':
+          // Reading surfaces — ring dims and shrinks so the cursor stays out
+          // of the way; native text selection is unaffected.
+          gsap.to(ring, {
+            opacity: 0.6,
+            scale: 0.7,
+            backgroundColor: 'rgba(0,0,0,0)',
+            borderColor: 'var(--color-foreground)',
+            duration: 0.28,
+            ease: 'power3.out',
+          })
+          gsap.to(dot, { opacity: 1, scale: 0.7, duration: 0.2 })
+          break
+        case 'media':
+        case 'image':
+          gsap.to(ring, {
+            opacity: 1,
+            scale: 2.6,
+            backgroundColor:
+              'color-mix(in srgb, var(--color-accent) 16%, transparent)',
+            borderColor: 'var(--color-accent)',
+            duration: 0.4,
+            ease: 'power3.out',
+          })
+          gsap.to(dot, { opacity: 1, scale: 0.8, duration: 0.2 })
+          break
+        case 'view':
+          // Eye cursor for portfolio/media hover — ring grows into a soft
+          // accent halo, dot fades out, the eye SVG + VIEW label fade in
+          // centered on the cursor.
+          gsap.to(ring, {
+            opacity: 1,
+            scale: 3.2,
+            backgroundColor:
+              'color-mix(in srgb, var(--color-accent) 12%, transparent)',
+            borderColor: 'var(--color-accent)',
+            duration: 0.4,
+            ease: 'power3.out',
+          })
+          gsap.to(dot, { opacity: 0, duration: 0.2 })
+          gsap.to(eye, {
+            opacity: 1,
+            scale: 1,
+            duration: 0.35,
+            ease: 'power3.out',
+          })
+          break
+        case 'hidden':
+          // Full cursor blackout — used when a section supplies its own
+          // cursor-follow element.
+          gsap.to(ring, { opacity: 0, duration: 0.28, ease: 'power3.out' })
+          gsap.to(dot, { opacity: 0, duration: 0.2 })
+          break
+        case 'disabled':
+          // Custom cursor fades out so the browser's native `not-allowed` icon
+          // is what the user sees over disabled controls.
+          gsap.to(ring, { opacity: 0, duration: 0.2, ease: 'power3.out' })
+          gsap.to(dot, { opacity: 0, duration: 0.2 })
+          break
+        default:
+          gsap.to(ring, {
+            opacity: 1,
+            scale: 1,
+            backgroundColor: 'rgba(0,0,0,0)',
+            borderColor: 'var(--color-foreground)',
+            duration: 0.28,
+            ease: 'power3.out',
+          })
+          gsap.to(dot, { opacity: 1, scale: 1, duration: 0.2 })
+      }
+    }
+
+    let lastState = 'default'
+    const handleOver = (e) => {
+      const el = e.target?.closest?.('[data-cursor]')
+      const next = el?.dataset.cursor || 'default'
+      if (next === lastState) return
+      lastState = next
+      applyState(next)
+    }
+
+    const handleLeaveWindow = () => {
+      gsap.to([dot, ring], { opacity: 0, duration: 0.25 })
+      visible = false
+    }
+
+    const handleEnterWindow = () => {
+      gsap.to([dot, ring], { opacity: 1, duration: 0.25 })
+      visible = true
+    }
+
+    window.addEventListener('mousemove', handleMove)
+    document.addEventListener('mouseover', handleOver)
+    document.addEventListener('mouseleave', handleLeaveWindow)
+    document.addEventListener('mouseenter', handleEnterWindow)
 
     return () => {
       window.removeEventListener('mousemove', handleMove)
-      cancelAnimationFrame(rafId)
+      document.removeEventListener('mouseover', handleOver)
+      document.removeEventListener('mouseleave', handleLeaveWindow)
+      document.removeEventListener('mouseenter', handleEnterWindow)
+      spinTween.kill()
+      pool.forEach((p) => {
+        gsap.killTweensOf(p)
+        p.remove()
+      })
+      delete root.dataset.customCursor
     }
-  }, [fine, rawX, rawY, coreX, coreY, rotate, stretch, blur])
-
-  // Push mode-dependent scale/opacity into their springs.
-  useEffect(() => {
-    const m = MODES[mode] ?? MODES.default
-    coreScale.set(m.coreScale)
-    trailScale.set(m.trailScale)
-    glowOpacity.set(suppressed ? 0 : m.glowOpacity)
-  }, [mode, suppressed, coreScale, trailScale, glowOpacity])
-
-  if (!fine) return null
-
-  const state = MODES[mode] ?? MODES.default
-  const showPill = !suppressed && state.showPill
+  }, [])
 
   return (
     <>
-      {/* Layer 1 — soft red glow, slowest spring */}
-      <motion.div
+      <div
+        ref={trailContainerRef}
         aria-hidden="true"
-        className="pointer-events-none fixed left-0 top-0 z-[9998] h-0 w-0"
-        style={{ x: glowX, y: glowY }}
-      >
-        <motion.span
-          className="absolute h-28 w-28 -translate-x-1/2 -translate-y-1/2 rounded-full"
-          style={{
-            background:
-              'radial-gradient(closest-side, var(--color-accent) 0%, transparent 72%)',
-            opacity: glowOpacity,
-            scale: trailScale,
-            willChange: 'transform, opacity',
-          }}
-        />
-      </motion.div>
-
-      {/* Layer 2 — angular red blade with motion blur + directional stretch */}
-      <motion.div
+        className="pointer-events-none fixed inset-0 z-[9997]"
+      />
+      <div
+        ref={ringRef}
         aria-hidden="true"
-        className="pointer-events-none fixed left-0 top-0 z-[9999] h-0 w-0"
-        style={{ x: trailX, y: trailY }}
-      >
-        <motion.svg
-          viewBox="-10 -6 20 12"
-          className="absolute h-4 w-6 -translate-x-1/2 -translate-y-1/2"
-          style={{
-            rotate,
-            scaleX: trailScaleX,
-            scaleY: trailScaleY,
-            filter: blurFilter,
-            willChange: 'transform, filter, opacity',
-          }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: suppressed ? 0 : 0.55 }}
-          transition={{ opacity: { duration: 0.2, ease: 'easeOut' } }}
-        >
-          <path d="M -9 0 L 0 -4 L 9 0 L 0 4 Z" fill="var(--color-accent)" />
-        </motion.svg>
-      </motion.div>
-
-      {/* Layer 3 — sharp core diamond, fastest spring, always precise */}
-      <motion.div
+        className="cursor-ring pointer-events-none fixed left-0 top-0 z-[9998] h-8 w-8 rounded-full border opacity-0"
+        style={{
+          borderColor: 'var(--color-foreground)',
+          willChange: 'transform, background-color, border-color',
+        }}
+      />
+      <div
+        ref={dotRef}
         aria-hidden="true"
-        className="pointer-events-none fixed left-0 top-0 z-[10000] h-0 w-0"
-        style={{ x: coreX, y: coreY }}
+        className="cursor-dot pointer-events-none fixed left-0 top-0 z-[9999] h-2.5 w-2.5 opacity-0"
+        style={{
+          color: 'var(--color-foreground)',
+          willChange: 'transform, opacity',
+        }}
       >
-        <motion.svg
-          viewBox="-8 -6 16 12"
-          className="absolute h-3 w-4 -translate-x-1/2 -translate-y-1/2"
-          style={{
-            rotate,
-            scale: coreScale,
-            willChange: 'transform, opacity',
-            filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.35))',
-          }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: suppressed ? 0 : 1 }}
-          transition={{ opacity: { duration: 0.22, ease: 'easeOut' } }}
+        <svg
+          ref={dotStarRef}
+          viewBox="0 0 100 100"
+          fill="currentColor"
+          aria-hidden="true"
+          className="h-full w-full"
         >
-          <path
-            d="M -7 0 L 0 -3.5 L 7 0 L 0 3.5 Z"
-            fill="var(--color-foreground)"
-            stroke="var(--color-accent)"
-            strokeWidth="1"
-            strokeLinejoin="miter"
-          />
-        </motion.svg>
-
-        {/* View pill — morphs in on portfolio / preview surfaces */}
-        <motion.span
-          className="absolute flex items-center gap-2 whitespace-nowrap rounded-full bg-foreground px-4 py-2 text-[0.7rem] font-black uppercase tracking-[0.28em] text-background shadow-[0_10px_30px_rgba(191,10,48,0.35)]"
-          style={{
-            left: 22,
-            top: -18,
-            willChange: 'transform, opacity',
-            transformOrigin: '0 50%',
-          }}
-          initial={false}
-          animate={{
-            opacity: showPill ? 1 : 0,
-            scale: showPill ? 1 : 0.55,
-            x: showPill ? 0 : -12,
-          }}
-          transition={{ type: 'spring', damping: 22, stiffness: 320 }}
+          <polygon points={STAR_POINTS} />
+        </svg>
+      </div>
+      <div
+        ref={eyeRef}
+        aria-hidden="true"
+        className="cursor-eye pointer-events-none fixed left-0 top-0 z-[9999] flex flex-col items-center gap-1 opacity-0"
+        style={{
+          color: 'var(--color-accent)',
+          willChange: 'transform, opacity',
+        }}
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+          className="h-4 w-4"
         >
-          <motion.span
-            className="block h-1.5 w-1.5 rounded-full bg-accent"
-            animate={showPill ? { scale: [1, 1.4, 1] } : { scale: 1 }}
-            transition={
-              showPill
-                ? { duration: 1.6, repeat: Infinity, ease: 'easeInOut' }
-                : { duration: 0.2 }
-            }
-          />
-          {state.label || 'VIEW'}
-        </motion.span>
-      </motion.div>
+          <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z" />
+          <circle cx="12" cy="12" r="3" />
+        </svg>
+        <span className="text-[8px] font-semibold uppercase tracking-[0.28em]">
+          View
+        </span>
+      </div>
     </>
   )
 }

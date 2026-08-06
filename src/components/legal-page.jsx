@@ -65,8 +65,8 @@ const LegalPage = ({ doc }) => {
         ref={heroRef}
         className="relative isolate overflow-hidden bg-background px-6 pb-16 pt-[9rem] lg:px-10 lg:pb-20 lg:pt-[11rem]"
       >
-        <div className="mx-auto max-w-[1600px]">
-          <div className="flex items-center gap-3 text-[0.82rem] uppercase tracking-[0.28em] text-foreground/60">
+        <div className="mx-auto max-w-[1600px] text-center">
+          <div className="flex items-center justify-center gap-3 text-[0.82rem] uppercase tracking-[0.28em] text-foreground/60">
             <span className="border border-muted px-2 py-0.5 font-mono text-[0.8rem] text-foreground/80">
               §
             </span>
@@ -78,11 +78,11 @@ const LegalPage = ({ doc }) => {
             <span>{doc.eyebrow}</span>
           </div>
 
-          <h1 className="mt-8 max-w-4xl text-balance text-[clamp(2.75rem,7vw,6rem)] leading-[0.92] tracking-[0.005em]">
+          <h1 className="mx-auto mt-8 max-w-4xl text-balance text-[clamp(2.75rem,7vw,6rem)] leading-[0.92] tracking-[0.005em]">
             <SplitText mode="chars">{doc.title}</SplitText>
           </h1>
 
-          <div className="mt-8 flex items-center gap-3 text-[0.78rem] uppercase tracking-[0.28em] text-foreground/55">
+          <div className="mt-8 flex items-center justify-center gap-3 text-[0.78rem] uppercase tracking-[0.28em] text-foreground/55">
             <span
               data-reveal="icon"
               aria-hidden="true"
@@ -91,7 +91,7 @@ const LegalPage = ({ doc }) => {
             <span>Last updated — {LEGAL_EFFECTIVE_DATE}</span>
           </div>
 
-          <p className="mt-8 max-w-2xl text-lg leading-relaxed text-foreground/75 lg:text-xl">
+          <p className="mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-foreground/75 lg:text-xl">
             <SplitText mode="block">{doc.intro}</SplitText>
           </p>
         </div>
@@ -117,7 +117,7 @@ const LegalPage = ({ doc }) => {
                     </h2>
                   </div>
 
-                  <div className="mt-6 space-y-5 text-base leading-relaxed text-foreground/80 lg:text-[1.05rem]">
+                  <div className="mt-6 max-w-[68ch] space-y-5 text-base leading-relaxed text-foreground/80 lg:text-[1.05rem]">
                     {section.body.map((paragraph, i) => (
                       <p key={i}>{renderCopy(paragraph)}</p>
                     ))}
