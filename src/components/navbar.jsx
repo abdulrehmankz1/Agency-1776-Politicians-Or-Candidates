@@ -36,7 +36,7 @@ const MotionLink = motion.create(Link)
 const LINKS = [
   { id: 'about', label: 'About', href: '/about' },
   { id: 'solutions-page', label: 'Solutions', href: '/solutions' },
-  { id: 'work-page', label: 'Work', href: '/work' },
+  { id: 'portfolio-page', label: 'Portfolio', href: '/portfolio' },
   { id: 'pricing-page', label: 'Pricing', href: '/pricing' },
   { id: 'contact-page', label: 'Contact', href: '/contact' },
 ]
@@ -48,7 +48,7 @@ const normaliseCtaHref = (href) =>
 
 // A nav link is active when its route matches the current page. Home ("/")
 // only matches exactly; every other route also matches its nested sub-paths
-// (e.g. /work stays active on /work/some-slug).
+// (e.g. /portfolio stays active on /portfolio/some-slug).
 const isRouteActive = (href, pathname) =>
   href === '/'
     ? pathname === '/'

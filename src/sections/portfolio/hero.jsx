@@ -3,10 +3,10 @@
 import HeroBackdrop from '@/components/hero-backdrop'
 import Icon from '@/components/icon'
 import SplitText from '@/components/split-text'
-import { AGENCY, WORK } from '@/constants/campaign'
+import { AGENCY, PORTFOLIO } from '@/constants/campaign'
 import { useSectionReveal } from '@/hooks/use-section-reveal'
 
-const WorkHero = () => {
+const PortfolioHero = () => {
   const scopeRef = useSectionReveal({
     start: 'top 95%',
     borderDuration: 0.55,
@@ -20,7 +20,7 @@ const WorkHero = () => {
   return (
     <section
       ref={scopeRef}
-      id="work-hero"
+      id="portfolio-hero"
       className="relative isolate flex min-h-[100dvh] flex-col overflow-hidden bg-background pt-[7rem]"
     >
       <HeroBackdrop />
@@ -37,15 +37,15 @@ const WorkHero = () => {
                 data-reveal="icon"
                 aria-hidden="true"
               />
-              <span>{AGENCY.brand} / Work</span>
+              <span>{AGENCY.brand} / Portfolio</span>
             </div>
 
             <h1 className="mt-10 text-balance text-[clamp(2.75rem,7vw,6.75rem)] leading-[0.92] tracking-[0.005em]">
-              <SplitText mode="words">{WORK.hero.heading}</SplitText>
+              <SplitText mode="words">{PORTFOLIO.hero.heading}</SplitText>
             </h1>
 
             <p className="mt-8 max-w-2xl text-lg leading-relaxed text-foreground/75 lg:text-xl">
-              <SplitText mode="block">{WORK.hero.tagline}</SplitText>
+              <SplitText mode="block">{PORTFOLIO.hero.tagline}</SplitText>
             </p>
           </div>
 
@@ -107,4 +107,4 @@ const WorkHero = () => {
   )
 }
 
-export default WorkHero
+export default PortfolioHero

@@ -22,7 +22,7 @@ import { scrollToTop } from '@/utils/scroll-to'
 const NAV_PRIMARY = [
   { label: 'Home', href: '/' },
   { label: 'About', href: '/about' },
-  { label: 'Work', href: '/work' },
+  { label: 'Portfolio', href: '/portfolio' },
 ]
 
 const NAV_SECONDARY = [
@@ -239,7 +239,7 @@ const FooterLink = ({ href, label, onClick }) => {
   const pathname = usePathname()
   // Active when the link's route matches the current page. Home ("/") only
   // matches exactly; every other route also matches its nested sub-paths
-  // (e.g. /work active on /work/some-slug). The scroll button (no href) is
+  // (e.g. /portfolio active on /portfolio/some-slug). The scroll button (no href) is
   // never marked active.
   const isActive = href
     ? href === '/'
