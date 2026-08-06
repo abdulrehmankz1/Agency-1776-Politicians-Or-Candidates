@@ -21,7 +21,7 @@
 
 // Rendered in the "Last updated" line. Set to the day the pages were drafted;
 // bump it whenever the copy below changes.
-export const LEGAL_EFFECTIVE_DATE = 'August 4, 2026'
+export const LEGAL_EFFECTIVE_DATE = 'August 6, 2026'
 
 export const PRIVACY_POLICY = {
   slug: 'privacy-policy',
@@ -100,7 +100,7 @@ export const PRIVACY_POLICY = {
     {
       heading: 'Contact Us',
       body: [
-        'If you have questions about this Privacy Policy or how we handle your information, reach out through our Contact page or email us at [[PRIVACY EMAIL]].',
+        'If you have questions about this Privacy Policy or how we handle your information, reach out through our Contact page or email us at outdevelopment@op1776.com.',
       ],
     },
   ],
@@ -171,7 +171,7 @@ export const TERMS_OF_SERVICE = {
     {
       heading: 'Governing Law',
       body: [
-        'These Terms are governed by the laws of the State of [[STATE]], without regard to its conflict-of-law principles. Any dispute relating to these Terms or the site will be subject to the exclusive jurisdiction of the state and federal courts located in that state.',
+        'These Terms are governed by the laws of the State of Texas, without regard to its conflict-of-law principles. Any dispute relating to these Terms or the site will be subject to the exclusive jurisdiction of the state and federal courts located in that state.',
       ],
     },
     {
@@ -183,7 +183,7 @@ export const TERMS_OF_SERVICE = {
     {
       heading: 'Contact Us',
       body: [
-        'Questions about these Terms can be sent through our Contact page or by email to [[PRIVACY EMAIL]].',
+        'Questions about these Terms can be sent through our Contact page or by email to outdevelopment@op1776.com.',
       ],
     },
   ],

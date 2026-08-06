@@ -2,8 +2,6 @@
 
 import HeroBackdrop from '@/components/hero-backdrop'
 import CtaButton from '@/components/cta-button'
-import Icon from '@/components/icon'
-import RevealBorder from '@/components/reveal-border'
 import SplitText from '@/components/split-text'
 import { AGENCY } from '@/constants/campaign'
 import { PRICING_HERO } from '@/constants/pricing'
@@ -29,7 +27,7 @@ const PricingHero = () => {
 
       <div className="relative z-10 mx-auto flex w-full max-w-[1600px] flex-1 flex-col justify-center px-6 pb-16 lg:px-10">
         <div className="grid grid-cols-12 items-end gap-8">
-          <div className="col-span-12 lg:col-span-8">
+          <div className="col-span-12">
             {/* Eyebrow — brand marker only. No invented descriptor text. */}
             <div className="flex items-center gap-3 text-[0.82rem] uppercase tracking-[0.28em] text-foreground/60">
               <span className="border border-muted px-2 py-0.5 font-mono text-[0.8rem] text-foreground/80">
@@ -58,48 +56,6 @@ const PricingHero = () => {
               >
                 {PRICING_HERO.cta.label}
               </CtaButton>
-            </div>
-          </div>
-
-          {/* Right rail — decorative signature plate that mirrors the
-              home hero's language so the two pages read as one system.
-              No copy is invented: only the brand mark + monogram. */}
-          <div
-            aria-hidden="true"
-            className="col-span-12 hidden lg:col-span-4 lg:block"
-          >
-            <div className="relative flex aspect-[4/5] max-h-[62vh] flex-col justify-between bg-surface p-8">
-              <RevealBorder tone="accent" />
-
-              <div className="flex items-start justify-between">
-                <Icon
-                  name="star"
-                  className="h-10 w-10 text-accent"
-                  strokeWidth={1.25}
-                />
-                <span
-                  data-reveal="icon"
-                  aria-hidden="true"
-                  className="block h-2 w-2 bg-accent"
-                />
-              </div>
-
-              <div className="pointer-events-none flex flex-1 items-center justify-center">
-                <div
-                  data-reveal="icon"
-                  className="font-display text-[8.5rem] leading-none tracking-[0.005em] text-foreground/90"
-                >
-                  17
-                  <span className="text-accent">76</span>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3 border-t border-muted pt-4">
-                <Icon name="scroll" className="h-4 w-4" strokeWidth={1.5} />
-                <span className="text-[0.82rem] uppercase tracking-[0.24em] text-foreground/70">
-                  {AGENCY.brand}
-                </span>
-              </div>
             </div>
           </div>
         </div>

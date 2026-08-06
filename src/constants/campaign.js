@@ -158,6 +158,7 @@ export const ABOUT = {
     ],
   },
   experience: {
+    eyebrow: 'HOW WE WORK',
     heading: 'THE AGENCY 1776 EXPERIENCE',
     body: 'We bring together strategy, messaging, design, and execution to build websites that support real outcomes: leads, voters, donors, supporters, inquiries, and momentum.',
     lines: [
