@@ -409,27 +409,29 @@ export const SOLUTIONS = {
 }
 
 /*
- * WORK (Campaigns Built) page content. The showcase now carries real client
+ * PORTFOLIO (Campaigns Built) page content. The showcase carries real client
  * projects — each entry pairs the client name with the live campaign site and
- * a screenshot captured from that site (stored in /public/work). The `role`
- * line is taken directly from each site's own hero (race / office / district)
- * so nothing here is invented. Cards link out to the live site in a new tab.
+ * a screenshot captured from that site (stored in /public/portfolio). The
+ * `role` line is taken directly from each site's own hero (race / office /
+ * district) so nothing here is invented. Cards link out to the live site in a
+ * new tab.
  */
-export const WORK = {
+export const PORTFOLIO = {
   hero: {
     heading: 'All Campaigns Built to Be Seen, Heard, and Backed.',
     tagline:
       'Agency 1776 supports American candidates, political teams, and movements that need a serious digital presence built around message, trust, and action.',
   },
   showcase: {
-    eyebrow: 'THE WORK',
+    eyebrow: 'THE PORTFOLIO',
     heading: 'Campaign Work Across Different Races and Movements.',
     body: 'Every campaign has a different race, audience, and path to support.',
     cta: { label: 'CONTACT US ABOUT A CAMPAIGN', href: '/contact' },
     /*
      * Real client projects. `image` points at the Playwright-captured
-     * screenshot in /public/work; `href` is the live campaign site (opened in
-     * a new tab). `role` is the race/office as stated on each client's site.
+     * screenshot in /public/portfolio; `href` is the live campaign site
+     * (opened in a new tab). `role` is the race / office / organization as
+     * stated on each client's own site.
      */
     projects: [
       {
@@ -437,21 +439,42 @@ export const WORK = {
         name: 'Mark Norman',
         role: 'Oregon House District 27',
         href: 'https://www.markfororegon.com/',
-        image: '/work/mark-norman.png',
+        image: '/portfolio/mark-norman.png',
+      },
+      {
+        slug: 'mark-geist',
+        name: 'Mark Geist',
+        role: 'Host · The Oz Cast',
+        href: 'https://markgeist.vercel.app/',
+        image: '/portfolio/mark-geist.png',
+      },
+      {
+        slug: 'coos-county-republicans',
+        name: 'Coos County Republicans',
+        role: 'Coos County Republican Central Committee',
+        href: 'https://www.coos.gop/',
+        image: '/portfolio/coos-county-republicans.png',
       },
       {
         slug: 'barbara-kahl',
         name: 'Dr. Barbara Kahl',
         role: 'Oregon’s 1st Congressional District',
         href: 'https://www.drkahlforcongress.com/',
-        image: '/work/barbara-kahl.png',
+        image: '/portfolio/barbara-kahl.png',
       },
       {
-        slug: 'randall-fryer',
-        name: 'Randall Fryer',
-        role: 'Oregon House District 28',
-        href: 'https://randallfryer.vercel.app/',
-        image: '/work/randall-fryer.png',
+        slug: 'royce-white',
+        name: 'Royce White',
+        role: 'U.S. Senate — Minnesota',
+        href: 'https://roycewhite.vercel.app/',
+        image: '/portfolio/royce-white.png',
+      },
+      {
+        slug: 'david-russ',
+        name: 'David Russ',
+        role: 'Oregon’s 6th Congressional District',
+        href: 'https://russisforus.com/',
+        image: '/portfolio/david-russ.png',
       },
     ],
   },

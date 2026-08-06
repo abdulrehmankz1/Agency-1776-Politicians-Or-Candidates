@@ -7,7 +7,7 @@ import Icon from '@/components/icon'
 import MagneticCard from '@/components/magnetic-card'
 import RevealBorder from '@/components/reveal-border'
 import SplitText from '@/components/split-text'
-import { WORK } from '@/constants/campaign'
+import { PORTFOLIO } from '@/constants/campaign'
 import { useScrubHeading } from '@/hooks/use-scrub-heading'
 import { useSectionReveal } from '@/hooks/use-section-reveal'
 
@@ -15,12 +15,12 @@ const Showcase = () => {
   const scopeRef = useSectionReveal()
   const headingRef = useScrubHeading()
 
-  const total = WORK.showcase.projects.length
+  const total = PORTFOLIO.showcase.projects.length
 
   return (
     <section
       ref={scopeRef}
-      id="work-showcase"
+      id="portfolio-showcase"
       className="relative isolate overflow-hidden bg-background py-32"
     >
       <div className="relative mx-auto max-w-[1600px] px-6 lg:px-10">
@@ -37,24 +37,24 @@ const Showcase = () => {
                 data-reveal="icon"
                 aria-hidden="true"
               />
-              <span>{WORK.showcase.eyebrow}</span>
+              <span>{PORTFOLIO.showcase.eyebrow}</span>
             </div>
 
             <h2
               ref={headingRef}
               className="mt-8 text-balance text-[clamp(2.75rem,6.5vw,5.75rem)] leading-[0.92] tracking-[0.005em]"
             >
-              <SplitText mode="words">{WORK.showcase.heading}</SplitText>
+              <SplitText mode="words">{PORTFOLIO.showcase.heading}</SplitText>
             </h2>
 
             <p className="mt-8 max-w-2xl text-lg leading-relaxed text-foreground/80 lg:text-xl">
-              <SplitText mode="block">{WORK.showcase.body}</SplitText>
+              <SplitText mode="block">{PORTFOLIO.showcase.body}</SplitText>
             </p>
           </div>
 
           <div className="col-span-12 flex items-end lg:col-span-4 lg:justify-end">
-            <CtaButton href={WORK.showcase.cta.href} variant="primary">
-              {WORK.showcase.cta.label}
+            <CtaButton href={PORTFOLIO.showcase.cta.href} variant="primary">
+              {PORTFOLIO.showcase.cta.label}
             </CtaButton>
           </div>
         </header>
@@ -64,7 +64,7 @@ const Showcase = () => {
             live campaign site in a new tab and renders a real
             Playwright-captured screenshot of that site. */}
         <ul className="grid grid-cols-1 gap-px bg-muted md:grid-cols-2">
-          {WORK.showcase.projects.map((project, i) => (
+          {PORTFOLIO.showcase.projects.map((project, i) => (
             <li
               key={project.slug}
               className="relative flex bg-background"
@@ -147,7 +147,7 @@ const Showcase = () => {
           {/* Odd project count leaves a dangling grid cell; this filler keeps
               that cell the same colour as the cards (instead of the muted gap
               colour) so the last row still reads clean. */}
-          {WORK.showcase.projects.length % 2 === 1 && (
+          {PORTFOLIO.showcase.projects.length % 2 === 1 && (
             <li aria-hidden="true" className="hidden bg-background md:block" />
           )}
         </ul>

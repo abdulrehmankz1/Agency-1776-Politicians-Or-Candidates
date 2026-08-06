@@ -101,7 +101,13 @@
       "Bash(npx eslint *)",
       "PowerShell($c = Get-NetTCPConnection -LocalPort 3000 -State Listen -ErrorAction SilentlyContinue; if \\($c\\) { $c.OwningProcess | Select-Object -Unique | ForEach-Object { try { Stop-Process -Id $_ -Force -ErrorAction Stop; \"killed $_\" } catch {} } } else { \"no listener on 3000\" })",
       "Bash(node run.js \"C:/Users/user/AppData/Local/Temp/claude/C--Users-user-Documents-development-claude-projects-Agency-1776-Politicians-Or-Candidates/97696b51-c324-438c-ac33-6b5962bc78ee/scratchpad/shot-legal.js\")",
-      "Bash(node run.js \"C:/Users/user/AppData/Local/Temp/claude/C--Users-user-Documents-development-claude-projects-Agency-1776-Politicians-Or-Candidates/97696b51-c324-438c-ac33-6b5962bc78ee/scratchpad/scroll-legal.js\")"
+      "Bash(node run.js \"C:/Users/user/AppData/Local/Temp/claude/C--Users-user-Documents-development-claude-projects-Agency-1776-Politicians-Or-Candidates/97696b51-c324-438c-ac33-6b5962bc78ee/scratchpad/scroll-legal.js\")",
+      "Read(//c/Users/user/Documents/development/claude-projects/Agency-1776-Business/src/**)",
+      "Read(//c/Users/user/Documents/development/claude-projects/Agency-1776-Business/src/components/**)",
+      "Bash(taskkill //PID 2764 //F)",
+      "Bash(git rm *)",
+      "Bash(node run.js \"C:\\\\Users\\\\user\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-user-Documents-development-claude-projects-Agency-1776-Politicians-Or-Candidates\\\\19d6c474-fc40-4a52-9774-57658ac9c8f8\\\\scratchpad\\\\retry.js\")",
+      "Bash(taskkill //PID 22944 //F)"
     ]
   }
 }

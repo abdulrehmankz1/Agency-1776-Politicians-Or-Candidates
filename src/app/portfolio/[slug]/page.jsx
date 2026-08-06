@@ -16,10 +16,11 @@ export async function generateMetadata({ params }) {
 }
 
 /*
- * Placeholder Work detail page. Renders whenever a `/work/[slug]` link is
- * clicked. Deliberately minimal chrome — no invented client case-study copy.
+ * Placeholder Portfolio detail page. Renders whenever a `/portfolio/[slug]`
+ * link is clicked. Deliberately minimal chrome — no invented client
+ * case-study copy.
  */
-const WorkDetailPage = async ({ params }) => {
+const PortfolioDetailPage = async ({ params }) => {
   const { slug } = await params
 
   return (
@@ -30,7 +31,7 @@ const WorkDetailPage = async ({ params }) => {
             <div className="col-span-12 lg:col-span-7">
               <div className="flex items-center gap-3 text-[0.82rem] uppercase tracking-[0.28em] text-foreground/60">
                 <Link
-                  href="/work"
+                  href="/portfolio"
                   className="group inline-flex items-center gap-2"
                   data-cursor="link"
                 >
@@ -39,7 +40,7 @@ const WorkDetailPage = async ({ params }) => {
                     className="h-3.5 w-3.5 rotate-180 text-accent"
                     strokeWidth={2}
                   />
-                  <span>Back to Work</span>
+                  <span>Back to Portfolio</span>
                 </Link>
                 <span
                   className="h-px w-8 bg-muted"
@@ -62,8 +63,8 @@ const WorkDetailPage = async ({ params }) => {
                 <CtaButton href="/contact" variant="primary">
                   CONTACT US
                 </CtaButton>
-                <CtaButton href="/work" variant="ghost">
-                  BACK TO WORK
+                <CtaButton href="/portfolio" variant="ghost">
+                  BACK TO PORTFOLIO
                 </CtaButton>
               </div>
             </div>
@@ -86,4 +87,4 @@ const WorkDetailPage = async ({ params }) => {
   )
 }
 
-export default WorkDetailPage
+export default PortfolioDetailPage

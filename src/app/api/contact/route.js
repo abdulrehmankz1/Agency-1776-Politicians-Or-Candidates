@@ -12,7 +12,7 @@ import { normalizePhoneForSubmit } from '@/lib/phone'
  * Webhook URLs stay server-side only.
  */
 const WEBHOOK_URLS = [
-  'https://services.leadconnectorhq.com/hooks/sXAEbVurmQaTnNok2hXX/webhook-trigger/wccMP5j9s0A5F31CTmKz',
+  'https://services.leadconnectorhq.com/hooks/sXAEbVurmQaTnNok2hXX/webhook-trigger/xzXNYKJboy6hpeTkbSFJ',
   'https://services.leadconnectorhq.com/hooks/sXAEbVurmQaTnNok2hXX/webhook-trigger/0kjJIBPhZUKQ9T6B0PqO',
 ]
 
