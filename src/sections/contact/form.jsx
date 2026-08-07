@@ -58,27 +58,6 @@ const initialFormState = () => {
 }
 
 /*
- * Progressive US phone formatter. Strips everything but digits, drops an
- * optional leading country-code "1", caps at 10 national digits, and lays
- * them out as `(231) 456-7890` as the user types. Because it re-derives the
- * value from digits on every keystroke, the field can only ever hold a
- * complete 10-digit number or a partial on the way to one — never stray
- * characters or an over-long string.
- */
-const formatUsPhone = (raw) => {
-  let digits = raw.replace(/\D/g, '')
-  if (digits.length > 10 && digits.startsWith('1')) digits = digits.slice(1)
-  digits = digits.slice(0, 10)
-  const area = digits.slice(0, 3)
-  const prefix = digits.slice(3, 6)
-  const line = digits.slice(6, 10)
-  if (digits.length > 6) return `(${area}) ${prefix}-${line}`
-  if (digits.length > 3) return `(${area}) ${prefix}`
-  if (digits.length > 0) return `(${area}`
-  return ''
-}
-
-/*
  * A phone value counts as "complete" only at a full 10-digit US number (an
  * optional leading "1" country code is allowed). Anything in between — the
  * partial numbers the client flagged (e.g. "(231) 2") — is rejected.
@@ -101,15 +80,24 @@ const validate = (values) => {
     errors.email = 'Invalid email'
   }
   /*
-   * Consent is unreachable — and unrequired — until a phone number exists. The
-   * form runs `noValidate`, so `required={hasPhone}` on each box is there for
-   * assistive tech; this check is what actually blocks the submit.
+   * The phone field is optional, but a partially typed number is not a valid
+   * submission. Without this guard the server's `normalizePhoneForSubmit`
+   * silently collapses an incomplete number to '' — which also drags both SMS
+   * consent flags to 'No' (they gate on a surviving phone) — so the user's
+   * number *and* their opt-in vanish with no feedback. Block the submit here so
+   * they either finish the number or clear the field.
    */
-  if (values.phone?.trim()) {
-    for (const c of CONSENT.options) {
-      if (!values[c.name]) errors[c.name] = 'Required'
-    }
+  const phone = values.phone?.trim()
+  if (phone && !isCompletePhone(phone)) {
+    errors.phone = 'Enter a complete phone number'
   }
+  /*
+   * SMS consent is optional — never required. The checkboxes are a genuine
+   * opt-in: a user may submit with a phone number and both boxes unticked, in
+   * which case the payload simply ships `sms_*: 'No'`. We deliberately do not
+   * block the submit on consent (and the phone input carries no `required`
+   * either) so ticking a box is always the user's free choice.
+   */
   return errors
 }
 
@@ -364,10 +352,7 @@ const ContactForm = () => {
                               field.type === 'tel' ? 'tel' : undefined
                             }
                             value={values[field.name]}
-                            onChange={update(
-                              field.name,
-                              field.type === 'tel' ? formatUsPhone : undefined,
-                            )}
+                            onChange={update(field.name)}
                             placeholder={field.placeholder}
                             disabled={submitting}
                             aria-invalid={!!errors[field.name]}
@@ -378,19 +363,15 @@ const ContactForm = () => {
                     ))}
 
                     {/*
-                     * SMS consent. Disabled until a phone number exists,
-                     * required the moment one does, auto-cleared when the
-                     * number is deleted.
+                     * SMS consent. Optional opt-in — never required. Disabled
+                     * until a phone number exists and auto-cleared when the
+                     * number is deleted, but the user may always leave the
+                     * boxes unticked and still submit.
                      */}
                     <FieldShell
                       index={CONTACT_PAGE.form.fields.length + 1}
                       label={CONSENT.label}
-                      required={hasPhone}
-                      error={
-                        CONSENT.options
-                          .map((c) => errors[c.name])
-                          .find(Boolean) ?? undefined
-                      }
+                      required={false}
                     >
                       <div className="flex flex-col gap-4">
                         {!hasPhone && (
@@ -415,8 +396,6 @@ const ContactForm = () => {
                               checked={values[option.name]}
                               onChange={toggleConsent(option.name)}
                               disabled={!hasPhone || submitting}
-                              required={hasPhone}
-                              aria-invalid={!!errors[option.name]}
                               data-cursor="button"
                               className="mt-1 h-4 w-4 shrink-0 accent-accent disabled:cursor-not-allowed disabled:opacity-40"
                             />
