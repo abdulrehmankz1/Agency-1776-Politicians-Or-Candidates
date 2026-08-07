@@ -442,13 +442,6 @@ export const PORTFOLIO = {
         image: '/portfolio/mark-norman.png',
       },
       {
-        slug: 'mark-geist',
-        name: 'Mark Geist',
-        role: 'Host · The Oz Cast',
-        href: 'https://markgeist.vercel.app/',
-        image: '/portfolio/mark-geist.png',
-      },
-      {
         slug: 'coos-county-republicans',
         name: 'Coos County Republicans',
         role: 'Coos County Republican Central Committee',
@@ -468,13 +461,6 @@ export const PORTFOLIO = {
         role: 'U.S. Senate — Minnesota',
         href: 'https://roycewhite.vercel.app/',
         image: '/portfolio/royce-white.png',
-      },
-      {
-        slug: 'david-russ',
-        name: 'David Russ',
-        role: 'Oregon’s 6th Congressional District',
-        href: 'https://russisforus.com/',
-        image: '/portfolio/david-russ.png',
       },
     ],
   },

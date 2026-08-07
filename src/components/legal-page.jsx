@@ -66,8 +66,8 @@ const LegalPage = ({ doc }) => {
         className="relative isolate overflow-hidden bg-background px-6 pb-16 pt-[9rem] lg:px-10 lg:pb-20 lg:pt-[11rem]"
       >
         <div className="mx-auto max-w-[1600px] text-center">
-          <div className="flex items-center justify-center gap-3 text-[0.82rem] uppercase tracking-[0.28em] text-foreground/60">
-            <span className="border border-muted px-2 py-0.5 font-mono text-[0.8rem] text-foreground/80">
+          <div className="flex items-center justify-center gap-3 text-[0.82rem] uppercase tracking-[0.28em] text-foreground/60 lg:text-[0.95rem]">
+            <span className="border border-muted px-2 py-0.5 font-mono text-[0.8rem] text-foreground/80 lg:text-[0.95rem]">
               §
             </span>
             <span
@@ -82,7 +82,7 @@ const LegalPage = ({ doc }) => {
             <SplitText mode="chars">{doc.title}</SplitText>
           </h1>
 
-          <div className="mt-8 flex items-center justify-center gap-3 text-[0.78rem] uppercase tracking-[0.28em] text-foreground/55">
+          <div className="mt-8 flex items-center justify-center gap-3 text-[0.78rem] uppercase tracking-[0.28em] text-foreground/55 lg:text-[0.95rem]">
             <span
               data-reveal="icon"
               aria-hidden="true"
@@ -109,7 +109,7 @@ const LegalPage = ({ doc }) => {
                   className="scroll-mt-32 border-t border-muted py-12 first:border-t-0 first:pt-0 lg:py-14"
                 >
                   <div className="flex items-baseline gap-4">
-                    <span className="font-mono text-[0.8rem] text-foreground/45">
+                    <span className="font-mono text-base text-foreground/60 lg:text-lg">
                       {String(index + 1).padStart(2, '0')}
                     </span>
                     <h2 className="text-[clamp(1.6rem,3vw,2.4rem)] leading-[1] tracking-[0.01em]">
@@ -157,7 +157,7 @@ const LegalPage = ({ doc }) => {
                   <Link
                     href="/contact"
                     data-cursor="link"
-                    className="group inline-flex items-center gap-3 whitespace-nowrap text-[0.82rem] uppercase tracking-[0.28em] text-foreground transition-colors hover:text-accent"
+                    className="group inline-flex items-center gap-3 whitespace-nowrap text-[0.82rem] uppercase tracking-[0.28em] text-foreground transition-colors hover:text-accent lg:text-[0.95rem]"
                   >
                     <span>Go to Contact</span>
                     <span

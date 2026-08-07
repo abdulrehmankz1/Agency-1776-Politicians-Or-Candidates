@@ -55,7 +55,7 @@ const PortfolioHero = () => {
             aria-hidden="true"
             className="col-span-12 hidden flex-col justify-end gap-6 lg:col-span-3 lg:flex"
           >
-            <div className="flex items-center gap-3 text-[0.75rem] uppercase tracking-[0.28em] text-foreground/65">
+            <div className="flex items-center gap-3 text-[0.8rem] uppercase tracking-[0.28em] text-foreground">
               <span data-reveal="icon" className="block h-px w-10 bg-accent" />
               <span>Portfolio</span>
             </div>
@@ -63,7 +63,7 @@ const PortfolioHero = () => {
               <div className="flex items-center justify-between bg-background px-4 py-4">
                 <span
                   data-reveal="icon"
-                  className="font-mono text-[0.75rem] uppercase tracking-[0.28em] text-foreground/65"
+                  className="font-display text-xl leading-none tracking-[0.005em] text-foreground"
                 >
                   Races
                 </span>
@@ -76,7 +76,7 @@ const PortfolioHero = () => {
               <div className="flex items-center justify-between bg-background px-4 py-4">
                 <span
                   data-reveal="icon"
-                  className="font-mono text-[0.75rem] uppercase tracking-[0.28em] text-foreground/65"
+                  className="font-display text-xl leading-none tracking-[0.005em] text-foreground"
                 >
                   Movements
                 </span>
@@ -89,7 +89,7 @@ const PortfolioHero = () => {
               <div className="flex items-center justify-between bg-background px-4 py-4">
                 <span
                   data-reveal="icon"
-                  className="font-mono text-[0.75rem] uppercase tracking-[0.28em] text-foreground/65"
+                  className="font-display text-xl leading-none tracking-[0.005em] text-foreground"
                 >
                   Digital
                 </span>

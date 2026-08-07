@@ -79,7 +79,7 @@ const TopBarTab = ({ tab }) => {
       aria-current={isActive ? 'page' : undefined}
       role={tab.href ? undefined : 'presentation'}
       className={cn(
-        'relative inline-flex select-none items-center whitespace-nowrap px-3 py-2 text-[13px] font-semibold uppercase tracking-[0.2em] md:px-5 md:text-sm',
+        'relative inline-flex select-none items-center whitespace-nowrap px-3 py-2 text-[13px] font-semibold uppercase tracking-[0.2em] md:px-5 md:text-[15px]',
         tab.href ? 'cursor-pointer' : 'cursor-not-allowed'
       )}
       style={{ color: TOPBAR_WHITE }}

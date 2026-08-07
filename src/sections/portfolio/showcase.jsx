@@ -130,7 +130,7 @@ const Showcase = () => {
                   <span
                     data-reveal="icon"
                     aria-hidden="true"
-                    className="ml-auto font-mono text-[0.8rem] uppercase tracking-[0.28em] text-accent"
+                    className="ml-auto font-mono text-[0.8rem] font-medium uppercase tracking-[0.28em] text-foreground"
                   >
                     {String(i + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
                   </span>

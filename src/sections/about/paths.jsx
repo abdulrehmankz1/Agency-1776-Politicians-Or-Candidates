@@ -69,7 +69,7 @@ const Paths = () => {
                   <span
                     data-reveal="icon"
                     aria-hidden="true"
-                    className="font-mono text-[0.78rem] uppercase tracking-[0.28em] text-accent"
+                    className="font-mono text-base uppercase tracking-[0.28em] text-white lg:text-lg"
                   >
                     0{i + 1} / 03
                   </span>

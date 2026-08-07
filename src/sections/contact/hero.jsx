@@ -29,8 +29,8 @@ const ContactHero = () => {
       <div className="relative z-10 mx-auto flex w-full max-w-[1600px] flex-1 flex-col justify-center px-6 pb-16 lg:px-10">
         <div className="grid grid-cols-12 gap-6 lg:gap-12">
           <div className="col-span-12">
-            <div className="flex items-center gap-3 text-[0.82rem] uppercase tracking-[0.28em] text-foreground/60">
-              <span className="border border-muted px-2 py-0.5 font-mono text-[0.8rem] text-foreground/80">
+            <div className="flex items-center gap-3 text-[0.82rem] uppercase tracking-[0.28em] text-foreground/60 lg:text-[0.95rem]">
+              <span className="border border-muted px-2 py-0.5 font-mono text-[0.8rem] text-foreground/80 lg:text-[0.95rem]">
                 01
               </span>
               <span
