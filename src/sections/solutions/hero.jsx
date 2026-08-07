@@ -75,7 +75,7 @@ const SolutionsHero = () => {
             aria-hidden="true"
             className="col-span-12 hidden flex-col justify-end lg:col-span-4 lg:flex"
           >
-            <div className="flex items-center gap-3 text-[0.75rem] uppercase tracking-[0.28em] text-foreground/65">
+            <div className="flex items-center gap-3 text-[0.8rem] uppercase tracking-[0.28em] text-foreground">
               <span
                 data-reveal="icon"
                 className="block h-px w-10 bg-accent"
@@ -90,7 +90,7 @@ const SolutionsHero = () => {
                 >
                   <span
                     data-reveal="icon"
-                    className="font-mono text-[0.8rem] uppercase tracking-[0.28em] text-accent"
+                    className="font-mono text-lg uppercase tracking-[0.28em] text-foreground"
                   >
                     {item.num}
                   </span>
@@ -98,7 +98,7 @@ const SolutionsHero = () => {
                     data-reveal="icon"
                     className="h-px w-6 shrink-0 bg-accent/60"
                   />
-                  <span className="font-display text-lg leading-none tracking-[0.005em]">
+                  <span className="font-display text-xl leading-none tracking-[0.005em] text-foreground">
                     {item.label}
                   </span>
                 </li>

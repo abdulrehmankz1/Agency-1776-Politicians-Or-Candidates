@@ -76,7 +76,7 @@ const Footer = () => {
               />
             </Link>
 
-            <div className="mt-8 flex items-center gap-3 text-[0.82rem] uppercase tracking-[0.28em] text-foreground/65">
+            <div className="mt-8 flex items-center gap-3 text-[0.82rem] uppercase tracking-[0.28em] text-foreground/65 lg:text-[0.95rem]">
               <span
                 data-reveal="icon"
                 aria-hidden="true"
@@ -117,7 +117,7 @@ const Footer = () => {
               >
                 17<span className="text-accent">76</span>
               </div>
-              <div className="mt-6 flex items-center gap-3 border-t border-muted pt-4 text-[0.75rem] uppercase tracking-[0.28em] text-foreground/65">
+              <div className="mt-6 flex items-center gap-3 border-t border-muted pt-4 text-[0.75rem] uppercase tracking-[0.28em] text-foreground/65 lg:text-[0.95rem]">
                 <Icon name="scroll" className="h-4 w-4" strokeWidth={1.5} />
                 <span>Est. 2025</span>
               </div>
@@ -157,7 +157,7 @@ const Footer = () => {
         </div>
 
         {/* Meta rail — copyright, legal links, year plate, brand mark. */}
-        <div className="flex flex-col gap-6 border-t border-muted pt-8 text-[0.78rem] uppercase tracking-[0.28em] text-foreground/65 md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-col gap-6 border-t border-muted pt-8 text-[0.78rem] uppercase tracking-[0.28em] text-foreground/65 md:flex-row md:items-center md:justify-between lg:text-[0.95rem]">
           <div className="flex items-center gap-3">
             <span
               data-reveal="icon"
@@ -204,8 +204,8 @@ const MetaLink = ({ href, label }) => (
 )
 
 const FooterGroupHeader = ({ title, index }) => (
-  <div className="flex items-center gap-3 text-[0.75rem] uppercase tracking-[0.28em] text-foreground/65">
-    <span className="border border-muted px-2 py-0.5 font-mono text-[0.75rem] text-foreground/70">
+  <div className="flex items-center gap-3 text-[0.75rem] uppercase tracking-[0.28em] text-foreground/65 lg:text-[0.95rem]">
+    <span className="border border-muted px-2 py-0.5 font-mono text-[0.75rem] text-foreground/70 lg:text-[0.95rem]">
       {index}
     </span>
     <span

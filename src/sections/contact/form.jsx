@@ -24,11 +24,11 @@ const FieldShell = ({ index, label, required, error, children }) => (
   <div className="relative">
     <label
       className={cn(
-        'flex flex-wrap items-baseline gap-3 text-[0.82rem] uppercase tracking-[0.28em]',
+        'flex flex-wrap items-baseline gap-3 text-[0.82rem] uppercase tracking-[0.28em] lg:text-[0.95rem]',
         error ? 'text-accent' : 'text-foreground/60',
       )}
     >
-      <span className="font-mono text-[0.8rem] text-accent">
+      <span className="font-mono text-[0.8rem] text-accent lg:text-[0.95rem]">
         {String(index).padStart(2, '0')}
       </span>
       <span>
@@ -36,7 +36,7 @@ const FieldShell = ({ index, label, required, error, children }) => (
         {required ? <span aria-hidden="true"> *</span> : null}
       </span>
       {error && (
-        <span className="ml-auto font-mono text-[0.75rem] normal-case tracking-[0.2em] text-accent">
+        <span className="ml-auto font-mono text-[0.75rem] normal-case tracking-[0.2em] text-accent lg:text-[0.95rem]">
           {error}
         </span>
       )}
@@ -212,8 +212,8 @@ const ContactForm = () => {
           {/* Left column — heading + intro, sticky on lg. */}
           <div className="col-span-12 lg:col-span-5">
             <div className="lg:sticky lg:top-[8rem]">
-              <div className="flex items-center gap-3 text-[0.82rem] uppercase tracking-[0.28em] text-foreground/60">
-                <span className="border border-muted px-2 py-0.5 font-mono text-[0.8rem] text-foreground/80">
+              <div className="flex items-center gap-3 text-[0.82rem] uppercase tracking-[0.28em] text-foreground/60 lg:text-[0.95rem]">
+                <span className="border border-muted px-2 py-0.5 font-mono text-[0.8rem] text-foreground/80 lg:text-[0.95rem]">
                   02
                 </span>
                 <span
@@ -288,7 +288,7 @@ const ContactForm = () => {
                       type="button"
                       onClick={resetForm}
                       data-cursor="button"
-                      className="font-display mt-4 inline-flex items-center gap-3 self-start text-sm uppercase tracking-[0.22em] text-foreground/70 hover:text-accent"
+                      className="font-display mt-4 inline-flex items-center gap-3 self-start text-sm uppercase tracking-[0.22em] text-foreground/70 hover:text-accent lg:text-[0.95rem]"
                     >
                       Send another inquiry
                       <span
@@ -375,7 +375,7 @@ const ContactForm = () => {
                     >
                       <div className="flex flex-col gap-4">
                         {!hasPhone && (
-                          <p className="text-xs italic text-foreground/50">
+                          <p className="text-xs italic text-foreground/50 lg:text-[0.95rem]">
                             {CONSENT.helper}
                           </p>
                         )}
@@ -384,7 +384,7 @@ const ContactForm = () => {
                           <label
                             key={option.name}
                             className={cn(
-                              'flex items-start gap-3 text-sm leading-relaxed transition-colors',
+                              'flex items-start gap-3 text-sm leading-relaxed transition-colors lg:text-base',
                               hasPhone
                                 ? 'cursor-pointer'
                                 : 'cursor-not-allowed',
@@ -442,7 +442,7 @@ const ContactForm = () => {
                       {status === 'error' && notice && (
                         <p
                           role="alert"
-                          className="font-mono text-xs uppercase tracking-[0.22em] text-accent"
+                          className="font-mono text-xs uppercase tracking-[0.22em] text-accent lg:text-[0.95rem]"
                         >
                           {notice}
                         </p>

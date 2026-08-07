@@ -228,7 +228,7 @@ const Navbar = () => {
             <CtaButton
               href={normalisedCtaHref}
               variant="primary"
-              className="!hidden !py-3 !px-4 text-xs sm:!inline-flex sm:!px-5"
+              className="!hidden !py-3 !px-4 text-xs sm:!inline-flex sm:!px-5 lg:text-[0.95rem]"
             >
               {heroCta.label}
             </CtaButton>
