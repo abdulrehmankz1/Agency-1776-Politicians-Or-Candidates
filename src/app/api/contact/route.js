@@ -1,20 +1,19 @@
 import { normalizePhoneForSubmit } from '@/lib/phone'
 
 /*
- * Fan-out targets, in order:
- *   0 — the contact form submission webhook. Drives the contact-form GHL
- *       workflow (contact create/update + the form's own automations).
- *   1 — the SMS consent webhook. Drives the SMS opt-in / subscription
- *       workflow from the two consent checkboxes (sms_updates / sms_promo).
- *
- * Both receive the identical payload — the SMS workflow reads the consent
- * fields and acts only when they are "Yes", so nothing is stripped for it.
- * Webhook URLs stay server-side only.
+ * Two fan-out targets, both server-side only:
+ *   • the contact form submission webhook — drives the contact-form GHL
+ *     workflow (contact create/update + the form's own automations). Fires
+ *     on EVERY submit.
+ *   • the SMS consent webhook — drives the SMS opt-in / subscription workflow.
+ *     Fires ONLY when the visitor actually consented (a phone number plus at
+ *     least one ticked consent box). Firing it unconditionally opted every
+ *     contact into SMS even with no box checked, so it is gated below.
  */
-const WEBHOOK_URLS = [
-  'https://services.leadconnectorhq.com/hooks/sXAEbVurmQaTnNok2hXX/webhook-trigger/xzXNYKJboy6hpeTkbSFJ',
-  'https://services.leadconnectorhq.com/hooks/sXAEbVurmQaTnNok2hXX/webhook-trigger/0kjJIBPhZUKQ9T6B0PqO',
-]
+const CONTACT_WEBHOOK_URL =
+  'https://services.leadconnectorhq.com/hooks/sXAEbVurmQaTnNok2hXX/webhook-trigger/xzXNYKJboy6hpeTkbSFJ'
+const SMS_WEBHOOK_URL =
+  'https://services.leadconnectorhq.com/hooks/sXAEbVurmQaTnNok2hXX/webhook-trigger/0kjJIBPhZUKQ9T6B0PqO'
 
 /*
  * The form collects a single "Full Name" field but GHL expects the pair, so we
@@ -66,9 +65,18 @@ export const POST = async (request) => {
       submitted_at: new Date().toISOString(),
     }
 
+    // Gate the SMS webhook on real consent: it fires only when a phone number
+    // survived normalisation AND at least one consent box was ticked. The
+    // contact webhook always fires.
+    const consentedToSms = Boolean(phone) && (Boolean(body.smsUpdates) || Boolean(body.smsPromo))
+    const webhookUrls = [
+      CONTACT_WEBHOOK_URL,
+      ...(consentedToSms ? [SMS_WEBHOOK_URL] : []),
+    ]
+
     // Per-URL `.catch` so one dead webhook cannot block delivery to the other.
     const results = await Promise.all(
-      WEBHOOK_URLS.map((url) =>
+      webhookUrls.map((url) =>
         fetch(url, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
