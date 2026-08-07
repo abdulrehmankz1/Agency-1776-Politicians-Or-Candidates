@@ -17,9 +17,9 @@ const TOPBAR_WHITE   = '#ffffff'   // division tabs — full white for readabili
 const TOPBAR_ACCENT  = '#bf0a30'   // brand crimson (hover feedback)
 
 const TABS = [
-  { id: 'business',    label: 'Business',                  active: false, href: 'https://agency-1776-business.vercel.app/' },
-  { id: 'politicians', label: 'Politicians or Candidates', active: true,  href: 'https://agency-1776-politicians-or-candidat.vercel.app/' },
-  { id: 'nonprofit',   label: 'Nonprofit',                 active: false, href: 'https://agency-1776-nonprofit.vercel.app/' },
+  { id: 'business',    label: 'Business',                  active: false, href: 'https://www.agency1776.com' },
+  { id: 'politicians', label: 'Politicians or Candidates', active: true,  href: 'https://politicians.agency1776.com' },
+  { id: 'nonprofit',   label: 'Nonprofit',                 active: false, href: 'https://nonprofits.agency1776.com' },
 ]
 
 const TopBrandBar = () => {
