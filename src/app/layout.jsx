@@ -1,4 +1,5 @@
 import { Bebas_Neue, Space_Grotesk } from 'next/font/google'
+import Script from 'next/script'
 
 import CustomCursor from '@/components/custom-cursor'
 import Navbar from '@/components/navbar'
@@ -6,6 +7,8 @@ import SmoothScrollProvider from '@/components/smooth-scroll-provider'
 import TopBrandBar from '@/components/top-brand-bar'
 
 import './globals.css'
+
+const GA_MEASUREMENT_ID = 'G-5SXMYSM52X'
 
 /*
  * Type system:
@@ -61,6 +64,19 @@ const RootLayout = ({ children }) => {
         <Navbar />
 
         <SmoothScrollProvider>{children}</SmoothScrollProvider>
+
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_MEASUREMENT_ID}');
+          `}
+        </Script>
       </body>
     </html>
   )
